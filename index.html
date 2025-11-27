@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payroll Manager Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Payroll Manager Simulator</h1>
+      <p class="subtitle">Make 10 decisions. See what kind of Payroll Manager you are.</p>
+    </header>
+
+    <main id="game" class="game">
+      <section id="scenario-section" class="card">
+        <h2 id="scenario-title"></h2>
+        <p id="scenario-description"></p>
+
+        <div id="choices-container" class="choices"></div>
+
+        <div id="outcome" class="outcome hidden"></div>
+
+        <button id="next-button" class="btn primary hidden">
+          Next
+        </button>
+      </section>
+
+      <section id="result-section" class="card hidden">
+        <h2>Your Result</h2>
+        <h3 id="result-title"></h3>
+        <p id="result-description"></p>
+
+        <h4>Final Stats</h4>
+        <ul id="stats-list" class="stats-list"></ul>
+
+        <p class="share-hint">
+          (Later: add a “Share on LinkedIn” button here)
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
