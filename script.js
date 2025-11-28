@@ -10,7 +10,7 @@ const INITIAL_STATS = {
   leadershipTrust: 0,
   accuracy: 0,
   timeliness: 0,
-  relationships: 0,
+  relationships: 0
 };
 
 const scenarios = [
@@ -26,13 +26,13 @@ const scenarios = [
         outcome:
           "You escalate hard. HR leadership responds, files arrive just in time. Leadership likes the decisiveness, team less so.",
         effects: {
-          timeliness: +2,
+          timeliness: 2,
           relationships: -1,
           teamMorale: -1,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           complianceRisk: -1,
-          accuracy: 0,
-        },
+          accuracy: 0
+        }
       },
       {
         id: "B",
@@ -40,13 +40,13 @@ const scenarios = [
         outcome:
           "You hit cut-off but errors are baked in. Finance flags the variances. You bought time but created pain later.",
         effects: {
-          timeliness: +1,
+          timeliness: 1,
           accuracy: -2,
           leadershipTrust: -1,
-          complianceRisk: +2,
-          relationships: +1,
-          teamMorale: 0,
-        },
+          complianceRisk: 2,
+          relationships: 1,
+          teamMorale: 0
+        }
       },
       {
         id: "C",
@@ -55,14 +55,14 @@ const scenarios = [
           "You attempt a manual rebuild. It mostly works, but the team is exhausted and it's not sustainable.",
         effects: {
           timeliness: 0,
-          accuracy: +1,
+          accuracy: 1,
           teamMorale: -2,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           complianceRisk: -1,
-          relationships: 0,
-        },
-      },
-    ],
+          relationships: 0
+        }
+      }
+    ]
   },
 
   {
@@ -77,13 +77,13 @@ const scenarios = [
         outcome:
           "You find root causes but slow everything down. Finance is relieved; the team is stressed.",
         effects: {
-          accuracy: +2,
+          accuracy: 2,
           complianceRisk: -2,
           timeliness: -1,
           teamMorale: -1,
-          leadershipTrust: +1,
-          relationships: +1,
-        },
+          leadershipTrust: 1,
+          relationships: 1
+        }
       },
       {
         id: "B",
@@ -91,13 +91,13 @@ const scenarios = [
         outcome:
           "You keep momentum while giving Finance just enough to calm down.",
         effects: {
-          accuracy: +1,
+          accuracy: 1,
           complianceRisk: -1,
-          timeliness: +1,
-          leadershipTrust: +1,
-          relationships: +1,
-          teamMorale: 0,
-        },
+          timeliness: 1,
+          leadershipTrust: 1,
+          relationships: 1,
+          teamMorale: 0
+        }
       },
       {
         id: "C",
@@ -105,15 +105,15 @@ const scenarios = [
         outcome:
           "You protect the cycle, but Finance feels ignored and escalations build.",
         effects: {
-          timeliness: +2,
+          timeliness: 2,
           accuracy: 0,
-          complianceRisk: +1,
+          complianceRisk: 1,
           leadershipTrust: -1,
           relationships: -2,
-          teamMorale: +1,
-        },
-      },
-    ],
+          teamMorale: 1
+        }
+      }
+    ]
   },
 
   {
@@ -129,12 +129,12 @@ const scenarios = [
           "Employees love it; reconciliation and tax questions explode.",
         effects: {
           accuracy: -2,
-          complianceRisk: +2,
-          leadershipTrust: +2,
+          complianceRisk: 2,
+          leadershipTrust: 2,
           timeliness: 0,
           teamMorale: -1,
-          relationships: +1,
-        },
+          relationships: 1
+        }
       },
       {
         id: "B",
@@ -142,13 +142,13 @@ const scenarios = [
         outcome:
           "Process stays intact. CEO isn’t thrilled but compliance is happy.",
         effects: {
-          accuracy: +2,
+          accuracy: 2,
           complianceRisk: -2,
-          timeliness: +1,
+          timeliness: 1,
           leadershipTrust: -1,
-          teamMorale: +1,
-          relationships: -1,
-        },
+          teamMorale: 1,
+          relationships: -1
+        }
       },
       {
         id: "C",
@@ -159,12 +159,12 @@ const scenarios = [
           accuracy: 0,
           complianceRisk: 0,
           timeliness: 0,
-          leadershipTrust: +1,
-          relationships: +1,
-          teamMorale: 0,
-        },
-      },
-    ],
+          leadershipTrust: 1,
+          relationships: 1,
+          teamMorale: 0
+        }
+      }
+    ]
   },
 
   {
@@ -179,13 +179,13 @@ const scenarios = [
         outcome:
           "You refuse to build on bad data. Slow but safe.",
         effects: {
-          accuracy: +2,
+          accuracy: 2,
           complianceRisk: -2,
           timeliness: -2,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           relationships: -1,
-          teamMorale: 0,
-        },
+          teamMorale: 0
+        }
       },
       {
         id: "B",
@@ -194,12 +194,12 @@ const scenarios = [
           "Cycle continues but the team is buried. Risk accepted.",
         effects: {
           accuracy: -1,
-          complianceRisk: +1,
-          timeliness: +1,
+          complianceRisk: 1,
+          timeliness: 1,
           teamMorale: -2,
           leadershipTrust: 0,
-          relationships: +1,
-        },
+          relationships: 1
+        }
       },
       {
         id: "C",
@@ -207,15 +207,15 @@ const scenarios = [
         outcome:
           "You lose time but regain stability. Future cycles are safer.",
         effects: {
-          accuracy: +1,
+          accuracy: 1,
           complianceRisk: -1,
           timeliness: -1,
           teamMorale: -1,
-          leadershipTrust: +1,
-          relationships: 0,
-        },
-      },
-    ],
+          leadershipTrust: 1,
+          relationships: 0
+        }
+      }
+    ]
   },
 
   {
@@ -230,13 +230,13 @@ const scenarios = [
         outcome:
           "You get the run through this time and agree on improvements. Relationship preserved, expectations rise.",
         effects: {
-          relationships: +2,
+          relationships: 2,
           complianceRisk: -1,
-          timeliness: +1,
-          leadershipTrust: +1,
+          timeliness: 1,
+          leadershipTrust: 1,
           teamMorale: -1,
-          accuracy: 0,
-        },
+          accuracy: 0
+        }
       },
       {
         id: "B",
@@ -244,13 +244,13 @@ const scenarios = [
         outcome:
           "Payroll runs, but you’re uneasy about hidden risk.",
         effects: {
-          timeliness: +2,
+          timeliness: 2,
           accuracy: -1,
-          complianceRisk: +2,
+          complianceRisk: 2,
           leadershipTrust: -1,
           relationships: 0,
-          teamMorale: 0,
-        },
+          teamMorale: 0
+        }
       },
       {
         id: "C",
@@ -260,13 +260,13 @@ const scenarios = [
         effects: {
           relationships: -2,
           complianceRisk: -1,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           timeliness: 0,
-          accuracy: +1,
-          teamMorale: +1,
-        },
-      },
-    ],
+          accuracy: 1,
+          teamMorale: 1
+        }
+      }
+    ]
   },
 
   {
@@ -281,13 +281,13 @@ const scenarios = [
         outcome:
           "You show visibility and empathy, then handle details privately. Good optics, controlled risk.",
         effects: {
-          relationships: +1,
-          leadershipTrust: +1,
+          relationships: 1,
+          leadershipTrust: 1,
           complianceRisk: 0,
           accuracy: 0,
           teamMorale: 0,
-          timeliness: 0,
-        },
+          timeliness: 0
+        }
       },
       {
         id: "B",
@@ -295,13 +295,13 @@ const scenarios = [
         outcome:
           "You prioritise facts over speed. The complaint sits a bit longer, but your response is strong and evidence-based.",
         effects: {
-          accuracy: +1,
+          accuracy: 1,
           complianceRisk: -1,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           relationships: 0,
           teamMorale: 0,
-          timeliness: 0,
-        },
+          timeliness: 0
+        }
       },
       {
         id: "C",
@@ -313,11 +313,11 @@ const scenarios = [
           leadershipTrust: 0,
           complianceRisk: 0,
           accuracy: 0,
-          teamMorale: +1,
-          timeliness: 0,
-        },
-      },
-    ],
+          teamMorale: 1,
+          timeliness: 0
+        }
+      }
+    ]
   },
 
   {
@@ -332,13 +332,13 @@ const scenarios = [
         outcome:
           "Deep fix, slow cycle. You uncover structural issues, not just one-offs.",
         effects: {
-          accuracy: +2,
+          accuracy: 2,
           complianceRisk: -2,
-          relationships: +2,
-          leadershipTrust: +1,
+          relationships: 2,
+          leadershipTrust: 1,
           teamMorale: -1,
-          timeliness: -1,
-        },
+          timeliness: -1
+        }
       },
       {
         id: "B",
@@ -347,12 +347,12 @@ const scenarios = [
           "You calm Finance with a story but don’t fix root causes.",
         effects: {
           accuracy: 0,
-          complianceRisk: +1,
-          relationships: +1,
+          complianceRisk: 1,
+          relationships: 1,
           leadershipTrust: 0,
           teamMorale: 0,
-          timeliness: +1,
-        },
+          timeliness: 1
+        }
       },
       {
         id: "C",
@@ -362,13 +362,13 @@ const scenarios = [
         effects: {
           relationships: -1,
           leadershipTrust: -1,
-          accuracy: +1,
+          accuracy: 1,
           complianceRisk: 0,
-          teamMorale: +1,
-          timeliness: 0,
-        },
-      },
-    ],
+          teamMorale: 1,
+          timeliness: 0
+        }
+      }
+    ]
   },
 
   {
@@ -384,12 +384,12 @@ const scenarios = [
           "You reduce financial risk first. Regulators in the other country aren’t thrilled by the delay.",
         effects: {
           complianceRisk: -1,
-          accuracy: +1,
+          accuracy: 1,
           timeliness: 0,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           teamMorale: -1,
-          relationships: 0,
-        },
+          relationships: 0
+        }
       },
       {
         id: "B",
@@ -400,10 +400,10 @@ const scenarios = [
           complianceRisk: -2,
           accuracy: 0,
           timeliness: 0,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           relationships: -1,
-          teamMorale: -1,
-        },
+          teamMorale: -1
+        }
       },
       {
         id: "C",
@@ -411,15 +411,15 @@ const scenarios = [
         outcome:
           "You technically hit both deadlines, but quality and morale take a hit.",
         effects: {
-          complianceRisk: +1,
+          complianceRisk: 1,
           accuracy: -1,
-          timeliness: +1,
+          timeliness: 1,
           teamMorale: -2,
           leadershipTrust: 0,
-          relationships: 0,
-        },
-      },
-    ],
+          relationships: 0
+        }
+      }
+    ]
   },
 
   {
@@ -434,13 +434,13 @@ const scenarios = [
         outcome:
           "You position payroll as under-resourced, not under-performing. Leadership appreciates the honesty.",
         effects: {
-          leadershipTrust: +2,
-          relationships: +1,
+          leadershipTrust: 2,
+          relationships: 1,
           complianceRisk: -1,
-          teamMorale: +1,
+          teamMorale: 1,
           timeliness: 0,
-          accuracy: 0,
-        },
+          accuracy: 0
+        }
       },
       {
         id: "B",
@@ -449,12 +449,12 @@ const scenarios = [
           "Short-term, it lands well, but trust only grows slowly among those who know the gaps.",
         effects: {
           leadershipTrust: 0,
-          relationships: +1,
+          relationships: 1,
           teamMorale: 0,
           accuracy: 0,
           complianceRisk: 0,
-          timeliness: 0,
-        },
+          timeliness: 0
+        }
       },
       {
         id: "C",
@@ -462,15 +462,15 @@ const scenarios = [
         outcome:
           "High-integrity move. Some leaders are impressed; others worry you’re not fully in control.",
         effects: {
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           relationships: 0,
           complianceRisk: -1,
           teamMorale: -1,
           timeliness: 0,
-          accuracy: +1,
-        },
-      },
-    ],
+          accuracy: 1
+        }
+      }
+    ]
   },
 
   {
@@ -485,13 +485,13 @@ const scenarios = [
         outcome:
           "Stressful delay, but you avoid shipping broken results and set a clear quality standard.",
         effects: {
-          accuracy: +3,
+          accuracy: 3,
           complianceRisk: -3,
           timeliness: -2,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           teamMorale: -1,
-          relationships: 0,
-        },
+          relationships: 0
+        }
       },
       {
         id: "B",
@@ -500,12 +500,12 @@ const scenarios = [
           "No missed payday, but you’re effectively shipping known defects.",
         effects: {
           accuracy: -3,
-          complianceRisk: +3,
-          timeliness: +2,
+          complianceRisk: 3,
+          timeliness: 2,
           leadershipTrust: -2,
           teamMorale: 0,
-          relationships: +1,
-        },
+          relationships: 1
+        }
       },
       {
         id: "C",
@@ -513,16 +513,16 @@ const scenarios = [
         outcome:
           "Most employees are paid on time while a few countries take the hit. Pragmatic containment.",
         effects: {
-          accuracy: +1,
+          accuracy: 1,
           complianceRisk: -1,
           timeliness: 0,
-          leadershipTrust: +1,
+          leadershipTrust: 1,
           teamMorale: 0,
-          relationships: +1,
-        },
-      },
-    ],
-  },
+          relationships: 1
+        }
+      }
+    ]
+  }
 ];
 
 // =======================================
@@ -532,6 +532,7 @@ const scenarios = [
 let currentStats = { ...INITIAL_STATS };
 let currentScenarioIndex = 0;
 let hasChosenInScenario = false;
+let latestArchetype = null;
 
 // DOM elements
 const scenarioSection = document.getElementById("scenario-section");
@@ -545,6 +546,8 @@ const resultTitleEl = document.getElementById("result-title");
 const resultDescriptionEl = document.getElementById("result-description");
 const statsListEl = document.getElementById("stats-list");
 const progressTextEl = document.getElementById("progress-text");
+const shareButtonEl = document.getElementById("share-button");
+const shareStatusEl = document.getElementById("share-status");
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -562,7 +565,6 @@ function renderScenario() {
     return;
   }
 
-  // update progress text
   if (progressTextEl) {
     progressTextEl.textContent = `Scenario ${scenario.id} of ${scenarios.length}`;
   }
@@ -570,14 +572,12 @@ function renderScenario() {
   scenarioTitleEl.textContent = `Scenario ${scenario.id}: ${scenario.title}`;
   scenarioDescriptionEl.textContent = scenario.description;
 
-  // Clear old choices & outcome
   choicesContainerEl.innerHTML = "";
   outcomeEl.textContent = "";
   outcomeEl.classList.add("hidden");
   nextButtonEl.classList.add("hidden");
   hasChosenInScenario = false;
 
-  // Render choice buttons
   scenario.choices.forEach((choice) => {
     const btn = document.createElement("button");
     btn.className = "btn";
@@ -588,21 +588,17 @@ function renderScenario() {
 }
 
 function handleChoiceClick(choice) {
-  if (hasChosenInScenario) return; // prevent double click
+  if (hasChosenInScenario) return;
   hasChosenInScenario = true;
 
-  // Disable all buttons
   const buttons = choicesContainerEl.querySelectorAll("button");
   buttons.forEach((btn) => btn.classList.add("disabled"));
 
-  // Apply stat changes
   applyEffects(choice.effects);
 
-  // Show outcome text
   outcomeEl.textContent = choice.outcome;
   outcomeEl.classList.remove("hidden");
 
-  // Show Next button
   nextButtonEl.classList.remove("hidden");
 }
 
@@ -623,19 +619,17 @@ nextButtonEl.addEventListener("click", handleNextScenario);
 // =======================================
 
 function determineArchetype(stats) {
-  // Flip compliance so positive = safer
   const safeCompliance = -stats.complianceRisk;
 
   const dimensions = [
-    { key: "accuracy", label: "Accuracy", value: stats.accuracy },
-    { key: "safeCompliance", label: "Compliance", value: safeCompliance },
-    { key: "teamMorale", label: "Team Morale", value: stats.teamMorale },
-    { key: "leadershipTrust", label: "Leadership Trust", value: stats.leadershipTrust },
-    { key: "timeliness", label: "Timeliness", value: stats.timeliness },
-    { key: "relationships", label: "Relationships", value: stats.relationships },
+    { key: "accuracy", value: stats.accuracy },
+    { key: "safeCompliance", value: safeCompliance },
+    { key: "teamMorale", value: stats.teamMorale },
+    { key: "leadershipTrust", value: stats.leadershipTrust },
+    { key: "timeliness", value: stats.timeliness },
+    { key: "relationships", value: stats.relationships }
   ];
 
-  // Find dominant dimension
   const dominant = dimensions.reduce((best, current) =>
     current.value > best.value ? current : best
   );
@@ -688,11 +682,10 @@ function renderResult() {
     progressTextEl.textContent = "Game complete";
   }
 
-  const archetype = determineArchetype(currentStats);
-  resultTitleEl.textContent = archetype.title;
-  resultDescriptionEl.textContent = archetype.description;
+  latestArchetype = determineArchetype(currentStats);
+  resultTitleEl.textContent = latestArchetype.title;
+  resultDescriptionEl.textContent = latestArchetype.description;
 
-  // Show stats
   statsListEl.innerHTML = "";
 
   const statLabels = {
@@ -701,7 +694,7 @@ function renderResult() {
     leadershipTrust: "Leadership Trust",
     accuracy: "Accuracy",
     timeliness: "Timeliness",
-    relationships: "Cross-Functional Relationships",
+    relationships: "Cross-Functional Relationships"
   };
 
   Object.entries(currentStats).forEach(([key, value]) => {
@@ -709,6 +702,59 @@ function renderResult() {
     li.textContent = `${statLabels[key]}: ${value}`;
     statsListEl.appendChild(li);
   });
+
+  if (shareStatusEl) {
+    shareStatusEl.textContent = "";
+  }
+}
+
+// =======================================
+// LINKEDIN SHARE
+// =======================================
+
+function handleShareClick() {
+  if (!latestArchetype) {
+    latestArchetype = determineArchetype(currentStats);
+  }
+
+  const gameUrl = "https://markjohnsonpayroll.github.io/payrollmanager/";
+  const shareText =
+    `I just completed the Payroll Manager Simulator and got "${latestArchetype.title}". ` +
+    `If you work in payroll, take it and see what kind of payroll manager you are: ${gameUrl}`;
+
+  const encodedUrl = encodeURIComponent(gameUrl);
+  const linkedinUrl =
+    `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+
+  if (shareStatusEl) {
+    shareStatusEl.textContent = "Opening LinkedIn…";
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(shareText).then(
+      () => {
+        if (shareStatusEl) {
+          shareStatusEl.textContent =
+            "Share text copied. LinkedIn opened in a new tab — just paste and post.";
+        }
+      },
+      () => {
+        if (shareStatusEl) {
+          shareStatusEl.textContent =
+            "LinkedIn opened in a new tab. You can add your own text to the post.";
+        }
+      }
+    );
+  } else if (shareStatusEl) {
+    shareStatusEl.textContent =
+      "LinkedIn opened in a new tab. You can add your own text to the post.";
+  }
+
+  window.open(linkedinUrl, "_blank");
+}
+
+if (shareButtonEl) {
+  shareButtonEl.addEventListener("click", handleShareClick);
 }
 
 // Start game on load
