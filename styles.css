@@ -81,7 +81,7 @@ body {
   background: #020617;
   color: #e5e7eb;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   transition:
     background 0.15s ease,
     transform 0.05s ease,
@@ -102,9 +102,6 @@ body {
 }
 
 .btn.primary {
-  width: 100%;
-  text-align: center;
-  margin-top: 4px;
   border-color: #2563eb;
   background: #1d4ed8;
 }
@@ -118,10 +115,6 @@ body {
   opacity: 0.6;
   cursor: default;
   box-shadow: none;
-}
-
-.share-btn {
-  margin-top: 10px;
 }
 
 .outcome {
@@ -161,6 +154,13 @@ body {
   font-size: 0.9rem;
   padding: 3px 0;
   color: #e5e7eb;
+}
+
+.result-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .share-hint {
