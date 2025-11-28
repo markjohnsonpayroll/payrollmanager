@@ -547,6 +547,7 @@ const resultDescriptionEl = document.getElementById("result-description");
 const statsListEl = document.getElementById("stats-list");
 const progressTextEl = document.getElementById("progress-text");
 const shareButtonEl = document.getElementById("share-button");
+const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 
 function applyEffects(effects) {
@@ -709,7 +710,7 @@ function renderResult() {
 }
 
 // =======================================
-// LINKEDIN SHARE
+// LINKEDIN SHARE (LINK + COPIED TEXT)
 // =======================================
 
 function handleShareClick() {
@@ -726,7 +727,7 @@ function handleShareClick() {
   const linkedinUrl =
     `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
-  // 1. Open LinkedIn first so the popup isn't blocked
+  // 1. Open LinkedIn first so popup isn't blocked
   window.open(linkedinUrl, "_blank");
 
   // 2. Status text
@@ -741,25 +742,136 @@ function handleShareClick() {
         () => {
           if (shareStatusEl) {
             shareStatusEl.textContent =
-              "Share text copied — just paste it into LinkedIn before posting.";
+              "LinkedIn opened. Your result text is copied — paste it into the post box, attach the image if you like, and publish.";
           }
         },
         () => {
           if (shareStatusEl) {
             shareStatusEl.textContent =
-              "LinkedIn opened. Clipboard copy was blocked, so just write your own message.";
+              "LinkedIn opened, but clipboard copy was blocked. Just type your own message and attach the image if you downloaded it.";
           }
         }
       );
     } else if (shareStatusEl) {
       shareStatusEl.textContent =
-        "LinkedIn opened. Clipboard not supported, so just type your own post.";
+        "LinkedIn opened. Clipboard not supported — just type your own message and attach the image if you downloaded it.";
     }
   }, 50);
 }
 
 if (shareButtonEl) {
   shareButtonEl.addEventListener("click", handleShareClick);
+}
+
+// =======================================
+// RESULT IMAGE GENERATION (PNG DOWNLOAD)
+// =======================================
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  let currY = y;
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, x, currY);
+      line = words[n] + " ";
+      currY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line) {
+    ctx.fillText(line, x, currY);
+  }
+}
+
+function handleDownloadImageClick() {
+  if (!latestArchetype) {
+    latestArchetype = determineArchetype(currentStats);
+  }
+
+  const canvas = document.createElement("canvas");
+  const width = 1200;
+  const height = 628;
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+
+  // Background gradient
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, "#020617");
+  gradient.addColorStop(0.5, "#111827");
+  gradient.addColorStop(1, "#0b1120");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+
+  // Title
+  ctx.fillStyle = "#e5e7eb";
+  ctx.font = "bold 42px system-ui";
+  ctx.textBaseline = "top";
+  ctx.fillText("Payroll Manager Simulator", 60, 50);
+
+  // Archetype
+  ctx.font = "bold 38px system-ui";
+  ctx.fillStyle = "#60a5fa";
+  ctx.fillText(`Result: ${latestArchetype.title}`, 60, 120);
+
+  // Description
+  ctx.font = "24px system-ui";
+  ctx.fillStyle = "#cbd5f5";
+  drawWrappedText(
+    ctx,
+    latestArchetype.description,
+    60,
+    180,
+    width - 120,
+    32
+  );
+
+  // Stats block
+  const statLines = [
+    `Team Morale: ${currentStats.teamMorale}`,
+    `Compliance Risk (lower is better): ${currentStats.complianceRisk}`,
+    `Leadership Trust: ${currentStats.leadershipTrust}`,
+    `Accuracy: ${currentStats.accuracy}`,
+    `Timeliness: ${currentStats.timeliness}`,
+    `Cross-Functional Relationships: ${currentStats.relationships}`,
+  ];
+
+  ctx.font = "22px system-ui";
+  ctx.fillStyle = "#e5e7eb";
+  let statsY = 340;
+  for (const line of statLines) {
+    ctx.fillText(line, 60, statsY);
+    statsY += 30;
+  }
+
+  // Footer link
+  const gameUrl = window.location.href.split("#")[0];
+  ctx.font = "18px system-ui";
+  ctx.fillStyle = "#9ca3af";
+  ctx.fillText(gameUrl, 60, height - 60);
+
+  const link = document.createElement("a");
+  link.download = `payroll-manager-${latestArchetype.title
+    .replace(/\s+/g, "-")
+    .toLowerCase()}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+
+  if (shareStatusEl) {
+    shareStatusEl.textContent =
+      "Result image downloaded. Attach it to your LinkedIn post along with the link.";
+  }
+}
+
+if (downloadImageButtonEl) {
+  downloadImageButtonEl.addEventListener("click", handleDownloadImageClick);
 }
 
 // Start game on load
