@@ -713,11 +713,13 @@ function renderResult() {
 // =======================================
 
 function handleShareClick() {
+  // Make sure we have an archetype
   if (!latestArchetype) {
     latestArchetype = determineArchetype(currentStats);
   }
 
-  const gameUrl = "https://markjohnsonpayroll.github.io/payrollmanager/";
+  // Use the current page URL (works on local + GitHub Pages)
+  const gameUrl = window.location.href.split("#")[0];
   const shareText =
     `I just completed the Payroll Manager Simulator and got "${latestArchetype.title}". ` +
     `If you work in payroll, take it and see what kind of payroll manager you are: ${gameUrl}`;
@@ -726,33 +728,37 @@ function handleShareClick() {
   const linkedinUrl =
     `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
+  // Update status text
   if (shareStatusEl) {
     shareStatusEl.textContent = "Opening LinkedIn…";
   }
 
+  // Open LinkedIn share window immediately (most reliable for popup blockers)
+  window.open(linkedinUrl, "_blank");
+
+  // Try to copy the suggested post text to clipboard
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(shareText).then(
       () => {
         if (shareStatusEl) {
           shareStatusEl.textContent =
-            "Share text copied. LinkedIn opened in a new tab — just paste and post.";
+            "LinkedIn opened in a new tab. Share text copied – just paste into the post and publish.";
         }
       },
       () => {
         if (shareStatusEl) {
           shareStatusEl.textContent =
-            "LinkedIn opened in a new tab. You can add your own text to the post.";
+            "LinkedIn opened in a new tab. Clipboard copy isn’t supported, so just write your own message.";
         }
       }
     );
   } else if (shareStatusEl) {
     shareStatusEl.textContent =
-      "LinkedIn opened in a new tab. You can add your own text to the post.";
+      "LinkedIn opened in a new tab. Clipboard copy isn’t supported, so just write your own message.";
   }
-
-  window.open(linkedinUrl, "_blank");
 }
 
+// Wire up the button
 if (shareButtonEl) {
   shareButtonEl.addEventListener("click", handleShareClick);
 }
