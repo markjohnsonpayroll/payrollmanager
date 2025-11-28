@@ -120,6 +120,10 @@ body {
   box-shadow: none;
 }
 
+.share-btn {
+  margin-top: 10px;
+}
+
 .outcome {
   margin-top: 10px;
   padding: 11px 12px;
@@ -160,7 +164,7 @@ body {
 }
 
 .share-hint {
-  margin-top: 12px;
+  margin-top: 8px;
   font-size: 0.84rem;
   color: #9ca3af;
 }
