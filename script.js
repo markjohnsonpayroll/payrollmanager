@@ -10,7 +10,7 @@ const INITIAL_STATS = {
   leadershipTrust: 0,
   accuracy: 0,
   timeliness: 0,
-  relationships: 0
+  relationships: 0,
 };
 
 const scenarios = [
@@ -31,8 +31,8 @@ const scenarios = [
           teamMorale: -1,
           leadershipTrust: 1,
           complianceRisk: -1,
-          accuracy: 0
-        }
+          accuracy: 0,
+        },
       },
       {
         id: "B",
@@ -45,8 +45,8 @@ const scenarios = [
           leadershipTrust: -1,
           complianceRisk: 2,
           relationships: 1,
-          teamMorale: 0
-        }
+          teamMorale: 0,
+        },
       },
       {
         id: "C",
@@ -59,10 +59,10 @@ const scenarios = [
           teamMorale: -2,
           leadershipTrust: 1,
           complianceRisk: -1,
-          relationships: 0
-        }
-      }
-    ]
+          relationships: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -82,8 +82,8 @@ const scenarios = [
           timeliness: -1,
           teamMorale: -1,
           leadershipTrust: 1,
-          relationships: 1
-        }
+          relationships: 1,
+        },
       },
       {
         id: "B",
@@ -96,8 +96,8 @@ const scenarios = [
           timeliness: 1,
           leadershipTrust: 1,
           relationships: 1,
-          teamMorale: 0
-        }
+          teamMorale: 0,
+        },
       },
       {
         id: "C",
@@ -110,10 +110,10 @@ const scenarios = [
           complianceRisk: 1,
           leadershipTrust: -1,
           relationships: -2,
-          teamMorale: 1
-        }
-      }
-    ]
+          teamMorale: 1,
+        },
+      },
+    ],
   },
 
   {
@@ -133,8 +133,8 @@ const scenarios = [
           leadershipTrust: 2,
           timeliness: 0,
           teamMorale: -1,
-          relationships: 1
-        }
+          relationships: 1,
+        },
       },
       {
         id: "B",
@@ -147,8 +147,8 @@ const scenarios = [
           timeliness: 1,
           leadershipTrust: -1,
           teamMorale: 1,
-          relationships: -1
-        }
+          relationships: -1,
+        },
       },
       {
         id: "C",
@@ -161,10 +161,10 @@ const scenarios = [
           timeliness: 0,
           leadershipTrust: 1,
           relationships: 1,
-          teamMorale: 0
-        }
-      }
-    ]
+          teamMorale: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -184,8 +184,8 @@ const scenarios = [
           timeliness: -2,
           leadershipTrust: 1,
           relationships: -1,
-          teamMorale: 0
-        }
+          teamMorale: 0,
+        },
       },
       {
         id: "B",
@@ -198,8 +198,8 @@ const scenarios = [
           timeliness: 1,
           teamMorale: -2,
           leadershipTrust: 0,
-          relationships: 1
-        }
+          relationships: 1,
+        },
       },
       {
         id: "C",
@@ -212,10 +212,10 @@ const scenarios = [
           timeliness: -1,
           teamMorale: -1,
           leadershipTrust: 1,
-          relationships: 0
-        }
-      }
-    ]
+          relationships: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -235,8 +235,8 @@ const scenarios = [
           timeliness: 1,
           leadershipTrust: 1,
           teamMorale: -1,
-          accuracy: 0
-        }
+          accuracy: 0,
+        },
       },
       {
         id: "B",
@@ -249,8 +249,8 @@ const scenarios = [
           complianceRisk: 2,
           leadershipTrust: -1,
           relationships: 0,
-          teamMorale: 0
-        }
+          teamMorale: 0,
+        },
       },
       {
         id: "C",
@@ -263,10 +263,10 @@ const scenarios = [
           leadershipTrust: 1,
           timeliness: 0,
           accuracy: 1,
-          teamMorale: 1
-        }
-      }
-    ]
+          teamMorale: 1,
+        },
+      },
+    ],
   },
 
   {
@@ -286,8 +286,8 @@ const scenarios = [
           complianceRisk: 0,
           accuracy: 0,
           teamMorale: 0,
-          timeliness: 0
-        }
+          timeliness: 0,
+        },
       },
       {
         id: "B",
@@ -300,8 +300,8 @@ const scenarios = [
           leadershipTrust: 1,
           relationships: 0,
           teamMorale: 0,
-          timeliness: 0
-        }
+          timeliness: 0,
+        },
       },
       {
         id: "C",
@@ -314,10 +314,10 @@ const scenarios = [
           complianceRisk: 0,
           accuracy: 0,
           teamMorale: 1,
-          timeliness: 0
-        }
-      }
-    ]
+          timeliness: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -337,8 +337,8 @@ const scenarios = [
           relationships: 2,
           leadershipTrust: 1,
           teamMorale: -1,
-          timeliness: -1
-        }
+          timeliness: -1,
+        },
       },
       {
         id: "B",
@@ -351,8 +351,8 @@ const scenarios = [
           relationships: 1,
           leadershipTrust: 0,
           teamMorale: 0,
-          timeliness: 1
-        }
+          timeliness: 1,
+        },
       },
       {
         id: "C",
@@ -365,10 +365,10 @@ const scenarios = [
           accuracy: 1,
           complianceRisk: 0,
           teamMorale: 1,
-          timeliness: 0
-        }
-      }
-    ]
+          timeliness: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -388,8 +388,8 @@ const scenarios = [
           timeliness: 0,
           leadershipTrust: 1,
           teamMorale: -1,
-          relationships: 0
-        }
+          relationships: 0,
+        },
       },
       {
         id: "B",
@@ -402,8 +402,8 @@ const scenarios = [
           timeliness: 0,
           leadershipTrust: 1,
           relationships: -1,
-          teamMorale: -1
-        }
+          teamMorale: -1,
+        },
       },
       {
         id: "C",
@@ -416,10 +416,10 @@ const scenarios = [
           timeliness: 1,
           teamMorale: -2,
           leadershipTrust: 0,
-          relationships: 0
-        }
-      }
-    ]
+          relationships: 0,
+        },
+      },
+    ],
   },
 
   {
@@ -439,8 +439,8 @@ const scenarios = [
           complianceRisk: -1,
           teamMorale: 1,
           timeliness: 0,
-          accuracy: 0
-        }
+          accuracy: 0,
+        },
       },
       {
         id: "B",
@@ -453,8 +453,8 @@ const scenarios = [
           teamMorale: 0,
           accuracy: 0,
           complianceRisk: 0,
-          timeliness: 0
-        }
+          timeliness: 0,
+        },
       },
       {
         id: "C",
@@ -467,10 +467,10 @@ const scenarios = [
           complianceRisk: -1,
           teamMorale: -1,
           timeliness: 0,
-          accuracy: 1
-        }
-      }
-    ]
+          accuracy: 1,
+        },
+      },
+    ],
   },
 
   {
@@ -490,8 +490,8 @@ const scenarios = [
           timeliness: -2,
           leadershipTrust: 1,
           teamMorale: -1,
-          relationships: 0
-        }
+          relationships: 0,
+        },
       },
       {
         id: "B",
@@ -504,8 +504,8 @@ const scenarios = [
           timeliness: 2,
           leadershipTrust: -2,
           teamMorale: 0,
-          relationships: 1
-        }
+          relationships: 1,
+        },
       },
       {
         id: "C",
@@ -518,11 +518,11 @@ const scenarios = [
           timeliness: 0,
           leadershipTrust: 1,
           teamMorale: 0,
-          relationships: 1
-        }
-      }
-    ]
-  }
+          relationships: 1,
+        },
+      },
+    ],
+  },
 ];
 
 // =======================================
@@ -627,7 +627,7 @@ function determineArchetype(stats) {
     { key: "teamMorale", value: stats.teamMorale },
     { key: "leadershipTrust", value: stats.leadershipTrust },
     { key: "timeliness", value: stats.timeliness },
-    { key: "relationships", value: stats.relationships }
+    { key: "relationships", value: stats.relationships },
   ];
 
   const dominant = dimensions.reduce((best, current) =>
@@ -694,7 +694,7 @@ function renderResult() {
     leadershipTrust: "Leadership Trust",
     accuracy: "Accuracy",
     timeliness: "Timeliness",
-    relationships: "Cross-Functional Relationships"
+    relationships: "Cross-Functional Relationships",
   };
 
   Object.entries(currentStats).forEach(([key, value]) => {
@@ -713,52 +713,51 @@ function renderResult() {
 // =======================================
 
 function handleShareClick() {
-  // Make sure we have an archetype
   if (!latestArchetype) {
     latestArchetype = determineArchetype(currentStats);
   }
 
-  // Use the current page URL (works on local + GitHub Pages)
   const gameUrl = window.location.href.split("#")[0];
   const shareText =
     `I just completed the Payroll Manager Simulator and got "${latestArchetype.title}". ` +
-    `If you work in payroll, take it and see what kind of payroll manager you are: ${gameUrl}`;
+    `If you work in payroll, try it and see what kind of payroll manager you are: ${gameUrl}`;
 
   const encodedUrl = encodeURIComponent(gameUrl);
   const linkedinUrl =
     `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
-  // Update status text
-  if (shareStatusEl) {
-    shareStatusEl.textContent = "Opening LinkedIn…";
-  }
-
-  // Open LinkedIn share window immediately (most reliable for popup blockers)
+  // 1. Open LinkedIn first so the popup isn't blocked
   window.open(linkedinUrl, "_blank");
 
-  // Try to copy the suggested post text to clipboard
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(shareText).then(
-      () => {
-        if (shareStatusEl) {
-          shareStatusEl.textContent =
-            "LinkedIn opened in a new tab. Share text copied – just paste into the post and publish.";
-        }
-      },
-      () => {
-        if (shareStatusEl) {
-          shareStatusEl.textContent =
-            "LinkedIn opened in a new tab. Clipboard copy isn’t supported, so just write your own message.";
-        }
-      }
-    );
-  } else if (shareStatusEl) {
-    shareStatusEl.textContent =
-      "LinkedIn opened in a new tab. Clipboard copy isn’t supported, so just write your own message.";
+  // 2. Status text
+  if (shareStatusEl) {
+    shareStatusEl.textContent = "LinkedIn opened. Preparing clipboard text…";
   }
+
+  // 3. Copy to clipboard on next tick
+  setTimeout(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareText).then(
+        () => {
+          if (shareStatusEl) {
+            shareStatusEl.textContent =
+              "Share text copied — just paste it into LinkedIn before posting.";
+          }
+        },
+        () => {
+          if (shareStatusEl) {
+            shareStatusEl.textContent =
+              "LinkedIn opened. Clipboard copy was blocked, so just write your own message.";
+          }
+        }
+      );
+    } else if (shareStatusEl) {
+      shareStatusEl.textContent =
+        "LinkedIn opened. Clipboard not supported, so just type your own post.";
+    }
+  }, 50);
 }
 
-// Wire up the button
 if (shareButtonEl) {
   shareButtonEl.addEventListener("click", handleShareClick);
 }
