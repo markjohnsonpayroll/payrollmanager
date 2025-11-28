@@ -532,7 +532,6 @@ const scenarios = [
 let currentStats = { ...INITIAL_STATS };
 let currentScenarioIndex = 0;
 let hasChosenInScenario = false;
-let latestArchetype = null;
 
 // DOM elements
 const scenarioSection = document.getElementById("scenario-section");
@@ -546,8 +545,6 @@ const resultTitleEl = document.getElementById("result-title");
 const resultDescriptionEl = document.getElementById("result-description");
 const statsListEl = document.getElementById("stats-list");
 const progressTextEl = document.getElementById("progress-text");
-const shareButtonEl = document.getElementById("share-button");
-const shareStatusEl = document.getElementById("share-status");
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -652,4 +649,67 @@ function determineArchetype(stats) {
       title = "The Data Detective";
       description =
         "You care deeply about correctness and root-cause analysis. You’re the one who actually knows why the numbers are what they are.";
-      br
+      break;
+    case "safeCompliance":
+      title = "The Enforcer";
+      description =
+        "Compliance is non-negotiable. You protect the company from regulatory risk, even if it means saying no to pressure.";
+      break;
+    case "teamMorale":
+      title = "The Protector";
+      description =
+        "You shield your team from chaos and burnout. You know that sustainable delivery depends on people, not heroics.";
+      break;
+    case "leadershipTrust":
+      title = "The Politician";
+      description =
+        "You manage upwards effectively, building trust and influence at senior levels to get payroll what it needs.";
+      break;
+    case "timeliness":
+      title = "The Operator";
+      description =
+        "You keep payroll running on time. Cut-offs, SLAs, and on-time pay are your anchor.";
+      break;
+    case "relationships":
+      title = "The Diplomat";
+      description =
+        "You invest heavily in cross-functional relationships. HR, Finance, and providers see you as a partner, not a blocker.";
+      break;
+  }
+
+  return { title, description, dominantDimension: dominant };
+}
+
+function renderResult() {
+  scenarioSection.classList.add("hidden");
+  resultSection.classList.remove("hidden");
+
+  if (progressTextEl) {
+    progressTextEl.textContent = "Game complete";
+  }
+
+  const archetype = determineArchetype(currentStats);
+  resultTitleEl.textContent = archetype.title;
+  resultDescriptionEl.textContent = archetype.description;
+
+  // Show stats
+  statsListEl.innerHTML = "";
+
+  const statLabels = {
+    teamMorale: "Team Morale",
+    complianceRisk: "Compliance Risk (lower is better)",
+    leadershipTrust: "Leadership Trust",
+    accuracy: "Accuracy",
+    timeliness: "Timeliness",
+    relationships: "Cross-Functional Relationships",
+  };
+
+  Object.entries(currentStats).forEach(([key, value]) => {
+    const li = document.createElement("li");
+    li.textContent = `${statLabels[key]}: ${value}`;
+    statsListEl.appendChild(li);
+  });
+}
+
+// Start game on load
+renderScenario();
