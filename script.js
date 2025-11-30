@@ -1066,27 +1066,18 @@ function generateResultImage() {
     );
   }
 
-  // Add a bit more padding before we start the radar block
+  // space before radar + tendencies block
   nextY += 30;
 
-  // ===== RADAR BLOCK (CENTERED) =====
+  // ===== RADAR + KEY TENDENCIES (TEXT, NOT TABLE) =====
   const blockTop = nextY;
-  const blockBottom = innerBottom - 60;
+  const blockBottom = innerBottom - 60; // leave room for footer
   const blockHeight = blockBottom - blockTop;
 
-  // Optional small label above the radar
-  ctx.font = "18px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#E5E7EB";
-  const radarLabel = "Profile across key dimensions";
-  const radarLabelWidth = ctx.measureText(radarLabel).width;
-  const radarLabelX = innerLeft + (contentWidth - radarLabelWidth) / 2;
-  const radarLabelY = blockTop;
-  ctx.fillText(radarLabel, radarLabelX, radarLabelY);
-
-  const radarRadius = 135;
-  const radarCenterX = innerLeft + contentWidth / 2;
-  const radarCenterY =
-    radarLabelY + 40 + (blockBottom - (radarLabelY + 40)) / 2;
+  // Radar on the left
+  const radarRadius = 125;
+  const radarCenterY = blockTop + blockHeight / 2;
+  const radarCenterX = innerLeft + radarRadius + 10;
 
   const safeCompliance = -currentStats.complianceRisk;
   const rawValues = [
@@ -1109,6 +1100,39 @@ function generateResultImage() {
     labels,
     borderColor
   );
+
+  // Key tendencies text block on the right
+  const statsX = radarCenterX + radarRadius + 80;
+  let statsY = blockTop + 10;
+
+  ctx.font = "22px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#F9FAFB";
+  ctx.fillText("Key tendencies", statsX, statsY);
+  statsY += 30;
+
+  ctx.font = "18px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText("Dimension  •  Profile", statsX, statsY);
+  statsY += 24;
+
+  ctx.font = "18px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+
+  const statDescriptors = [
+    { label: "Accuracy", score: currentStats.accuracy },
+    { label: "Timeliness", score: currentStats.timeliness },
+    { label: "Team Morale", score: currentStats.teamMorale },
+    { label: "Relationships", score: currentStats.relationships },
+    { label: "Leadership Trust", score: currentStats.leadershipTrust },
+    { label: "Compliance Focus", score: safeCompliance },
+  ];
+
+  statDescriptors.forEach((s) => {
+    const band = scoreToBandLabel(s.score); // e.g. "Strong", "Needs focus"
+    const line = `${s.label}: ${band}`;
+    ctx.fillText(line, statsX, statsY);
+    statsY += 24;
+  });
 
   // ===== BRANDED FOOTER =====
   const gameUrl = window.location.href.split("#")[0];
@@ -1137,7 +1161,6 @@ function generateResultImage() {
     resultImageEl.classList.remove("hidden");
   }
 }
-
 
 // =======================================
 // DOWNLOAD & COPY TEXT HANDLERS
