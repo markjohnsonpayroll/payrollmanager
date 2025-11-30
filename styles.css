@@ -434,6 +434,16 @@ button {
   background: rgba(15, 23, 42, 1);
 }
 
+/* Make Download Image match the Copy button width */
+#download-image-button {
+  width: 100%;
+  display: block;
+}
+
+#download-image-button {
+  margin-bottom: 10px; /* matches the spacing above the copy area */
+}
+
 /* =========================
    Footer
    ========================= */
