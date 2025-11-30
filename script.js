@@ -1067,16 +1067,20 @@ function generateResultImage() {
 
   nextY += 10;
 
-  // ===== RADAR + "TABLE" BLOCK =====
+  // ===== RADAR + TABLE BLOCK =====
   const blockTop = nextY + 10;
-  const blockBottom = innerBottom - 60; // leave more room for footer
+  const blockBottom = innerBottom - 50; // leave room for footer
   const blockHeight = blockBottom - blockTop;
 
+  // Slightly more central layout
   const radarRadius = 115;
-
-  // Shift radar + stats slightly right to reduce empty space on the left
   const radarCenterY = blockTop + blockHeight / 2;
-  const radarCenterX = innerLeft + radarRadius + 80;
+  const radarCenterX = innerLeft + contentWidth * 0.30;
+
+  const tableLeft = innerLeft + contentWidth * 0.50;
+  const tableRight = innerRight - 10;
+  const tableWidth = tableRight - tableLeft;
+  const tableColSplit = tableLeft + tableWidth * 0.52;
 
   // Prepare values for radar (normalised)
   const safeCompliance = -currentStats.complianceRisk;
@@ -1103,38 +1107,7 @@ function generateResultImage() {
     borderColor
   );
 
-  // ===== KEY TENDENCIES AS A TABLE =====
-  const tableX = radarCenterX + radarRadius + 80;
-  let tableY = blockTop + 24;
-
-  // Header
-  ctx.font = "22px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#F9FAFB";
-  ctx.fillText("Key tendencies", tableX, tableY);
-  tableY += 30;
-
-  // Column headings
-  ctx.font = "16px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#9CA3AF";
-  const colGap = 210; // space between label & band
-  ctx.fillText("Dimension", tableX, tableY);
-  ctx.fillText("Profile", tableX + colGap, tableY);
-  tableY += 6;
-
-  // Header underline
-  ctx.strokeStyle = "#111827";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(tableX, tableY + 6);
-  ctx.lineTo(tableX + colGap + 220, tableY + 6);
-  ctx.stroke();
-
-  tableY += 18;
-
-  // Rows
-  ctx.font = "18px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#E5E7EB";
-
+  // ===== TABLE: KEY TENDENCIES =====
   const statDescriptors = [
     { label: "Accuracy", score: currentStats.accuracy },
     { label: "Timeliness", score: currentStats.timeliness },
@@ -1144,43 +1117,88 @@ function generateResultImage() {
     { label: "Compliance Focus", score: safeCompliance },
   ];
 
-  statDescriptors.forEach((s) => {
+  // Title
+  let headerY = blockTop + 4;
+  ctx.font = "22px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#F9FAFB";
+  ctx.fillText("Key tendencies", tableLeft, headerY);
+
+  // Column headers
+  const tableTop = headerY + 28;
+  ctx.font = "13px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText("Dimension", tableLeft, tableTop);
+  ctx.fillText("Tendency", tableColSplit + 12, tableTop);
+
+  // Header underline
+  const headerLineY = tableTop + 8;
+  ctx.strokeStyle = "rgba(148,163,184,0.35)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(tableLeft, headerLineY);
+  ctx.lineTo(tableRight, headerLineY);
+  ctx.stroke();
+
+  // Column divider
+  const tableBottomY =
+    headerLineY + 8 + statDescriptors.length * 26 + 4;
+  ctx.strokeStyle = "rgba(148,163,184,0.20)";
+  ctx.beginPath();
+  ctx.moveTo(tableColSplit, tableTop - 10);
+  ctx.lineTo(tableColSplit, tableBottomY);
+  ctx.stroke();
+
+  // Rows
+  let rowY = headerLineY + 14;
+  const rowHeight = 26;
+
+  ctx.font = "15px 'Inter', system-ui, sans-serif";
+
+  statDescriptors.forEach((s, idx) => {
     const band = scoreToBandLabel(s.score);
 
-    // label
+    // dimension
     ctx.fillStyle = "#E5E7EB";
-    ctx.fillText(s.label, tableX, tableY);
+    ctx.fillText(s.label, tableLeft, rowY);
 
-    // band value in slightly brighter colour
-    ctx.fillStyle = "#BFDBFE";
-    ctx.fillText(band, tableX + colGap, tableY);
+    // tendency
+    ctx.fillStyle = "#F9FAFB";
+    ctx.fillText(band, tableColSplit + 12, rowY);
 
-    tableY += 26;
+    // faint row line (except after last row)
+    if (idx < statDescriptors.length - 1) {
+      const lineY = rowY + 8;
+      ctx.strokeStyle = "rgba(148,163,184,0.16)";
+      ctx.beginPath();
+      ctx.moveTo(tableLeft, lineY);
+      ctx.lineTo(tableRight, lineY);
+      ctx.stroke();
+    }
+
+    rowY += rowHeight;
   });
 
-  // ===== BRANDED FOOTER (WITH MORE BOTTOM PADDING) =====
+  // ===== BRANDED FOOTER (with a bit more padding) =====
   const gameUrl = window.location.href.split("#")[0];
-
-  // give extra breathing room above the border
-  const footerY = innerBottom - 40;
+  const footerLineY = innerBottom - 32;
 
   // subtle divider line
   ctx.strokeStyle = "#111827";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(innerLeft, footerY);
-  ctx.lineTo(innerRight, footerY);
+  ctx.moveTo(innerLeft, footerLineY);
+  ctx.lineTo(innerRight, footerLineY);
   ctx.stroke();
 
   // branding text
   ctx.font = "16px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
-  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 22);
+  ctx.fillText("Payroll Manager Simulator", innerLeft, footerLineY + 22);
 
   ctx.font = "14px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#9CA3AF";
   const cleanUrl = gameUrl.replace(/^https?:\/\//, "");
-  ctx.fillText(cleanUrl, innerLeft, footerY + 40);
+  ctx.fillText(cleanUrl, innerLeft, footerLineY + 40);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
