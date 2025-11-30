@@ -557,9 +557,8 @@ const resultImageEl = document.getElementById("result-image");
 const introSection = document.getElementById("intro-section");
 const startButton = document.getElementById("start-button");
 
-// Share buttons
-const linkedinShareButtonEl = document.getElementById("linkedin-share-button");
-const copyLinkButtonEl = document.getElementById("copy-link-button");
+// Share copy button
+const copyResultButtonEl = document.getElementById("copy-result-button");
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -1072,7 +1071,7 @@ function handleDownloadImageClick() {
 
   if (shareStatusEl) {
     shareStatusEl.textContent =
-      "Result image downloaded. Attach it to your LinkedIn post along with the link.";
+      "Result image downloaded. Attach it to your LinkedIn post along with the copied text.";
   }
 }
 
@@ -1084,42 +1083,46 @@ function getCanonicalGameUrl() {
   return window.location.href.split("#")[0];
 }
 
-function handleLinkedInShareClick() {
+// Build the share text that goes on the clipboard
+function buildShareText() {
   const url = getCanonicalGameUrl();
-  const shareUrl =
-    "https://www.linkedin.com/sharing/share-offsite/?url=" +
-    encodeURIComponent(url);
+  const title = latestArchetype ? latestArchetype.title : "a payroll archetype";
 
-  window.open(shareUrl, "_blank", "noopener");
-
-  if (shareStatusEl) {
-    shareStatusEl.textContent =
-      "LinkedIn share window opened. Upload your result image and hit post.";
-  }
+  return (
+    `I just played the Payroll Manager Simulator and got "${title}". ` +
+    `It walks you through 10 global payroll scenarios and shows how you balance timeliness, compliance, relationships and delivery.\n\n` +
+    `Try it here: ${url}\n` +
+    `#PayrollManagerSimulator`
+  );
 }
 
-async function handleCopyLinkClick() {
-  const url = getCanonicalGameUrl();
-
-  try {
-    await navigator.clipboard.writeText(url);
-    if (shareStatusEl) {
-      shareStatusEl.textContent = "Game link copied to clipboard.";
-    }
-  } catch (err) {
+async function handleCopyResultClick() {
+  if (!latestArchetype) {
     if (shareStatusEl) {
       shareStatusEl.textContent =
-        "Couldn’t copy automatically – you can manually copy the URL from your browser.";
+        "Finish the simulation first to copy your result.";
+    }
+    return;
+  }
+
+  const text = buildShareText();
+
+  try {
+    await navigator.clipboard.writeText(text);
+    if (shareStatusEl) {
+      shareStatusEl.textContent = "Result text copied. Paste it into your LinkedIn post.";
+    }
+  } catch (err) {
+    console.error("Clipboard copy failed:", err);
+    if (shareStatusEl) {
+      shareStatusEl.textContent =
+        "Couldn’t copy automatically – please paste manually.";
     }
   }
 }
 
-if (linkedinShareButtonEl) {
-  linkedinShareButtonEl.addEventListener("click", handleLinkedInShareClick);
-}
-
-if (copyLinkButtonEl) {
-  copyLinkButtonEl.addEventListener("click", handleCopyLinkClick);
+if (copyResultButtonEl) {
+  copyResultButtonEl.addEventListener("click", handleCopyResultClick);
 }
 
 // =======================================
