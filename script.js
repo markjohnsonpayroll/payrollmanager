@@ -23,6 +23,15 @@ const BORDER_COLORS = {
   "The Data Detective": "#38BDF8",  // electric blue
 };
 
+// Small tag text helpers (for consistency)
+const TAGS = {
+  TIMELINESS: "⏱️ Timeliness pressure",
+  ACCURACY: "🔍 Accuracy issue",
+  RELATIONSHIPS: "🤝 Relationship tension",
+  COMPLIANCE: "📉 Compliance risk",
+  CRISIS: "🔥 Crisis",
+};
+
 // Scenario data
 const scenarios = [
   {
@@ -30,6 +39,7 @@ const scenarios = [
     title: "The Cut-Off Collision",
     description:
       "It’s Monday morning. Three countries haven’t delivered time files, and cut-off is today. HR says: 'We’re working on it, just hold the run for now.' What do you do?",
+    tags: [TAGS.TIMELINESS, TAGS.RELATIONSHIPS, TAGS.CRISIS],
     choices: [
       {
         id: "A",
@@ -80,6 +90,7 @@ const scenarios = [
     title: "Retro Chain Reaction",
     description:
       "Variance reports show unexpected retros across six jurisdictions. Finance wants explanations 'by the hour'.",
+    tags: [TAGS.ACCURACY, TAGS.COMPLIANCE],
     choices: [
       {
         id: "A",
@@ -130,6 +141,7 @@ const scenarios = [
     title: "The Surprise Global Bonus",
     description:
       "The CEO announces a surprise global bonus. HR wants it included this month; no upstream prep done.",
+    tags: [TAGS.CRISIS, TAGS.COMPLIANCE, TAGS.RELATIONSHIPS],
     choices: [
       {
         id: "A",
@@ -180,6 +192,7 @@ const scenarios = [
     title: "Integration Chaos",
     description:
       "Your HCM → Payroll integration exported blank fields. Half the import is missing key values.",
+    tags: [TAGS.ACCURACY, TAGS.COMPLIANCE, TAGS.CRISIS],
     choices: [
       {
         id: "A",
@@ -230,6 +243,7 @@ const scenarios = [
     title: "In-Country Provider Revolt",
     description:
       "Your LATAM in-country provider rejects the file and refuses to process it.",
+    tags: [TAGS.RELATIONSHIPS, TAGS.COMPLIANCE],
     choices: [
       {
         id: "A",
@@ -280,6 +294,7 @@ const scenarios = [
     title: "The Public Complaint",
     description:
       "An employee tags the company on social media: 'I haven’t been paid correctly for months and payroll is ignoring me.'",
+    tags: [TAGS.RELATIONSHIPS, TAGS.ACCURACY, TAGS.CRISIS],
     choices: [
       {
         id: "A",
@@ -330,6 +345,7 @@ const scenarios = [
     title: "The GL Black Hole",
     description:
       "Finance flags a major GL mismatch and says payroll keeps 'getting it wrong'. They want a multi-country audit.",
+    tags: [TAGS.ACCURACY, TAGS.RELATIONSHIPS, TAGS.COMPLIANCE],
     choices: [
       {
         id: "A",
@@ -380,6 +396,7 @@ const scenarios = [
     title: "The Filing Deadline Duel",
     description:
       "Two high-impact statutory filings are due today. You only have capacity to get one right on time without overtime.",
+    tags: [TAGS.TIMELINESS, TAGS.COMPLIANCE],
     choices: [
       {
         id: "A",
@@ -430,6 +447,7 @@ const scenarios = [
     title: "The Leadership Review",
     description:
       "It’s time for your quarterly business review. You have strong wins but also visible misses this cycle.",
+    tags: [TAGS.RELATIONSHIPS, TAGS.CRISIS],
     choices: [
       {
         id: "A",
@@ -480,6 +498,7 @@ const scenarios = [
     title: "The End-of-Cycle Collapse",
     description:
       "Hours before global approval, you detect missing cost centres, FX variances, and retro loops in several countries.",
+    tags: [TAGS.CRISIS, TAGS.ACCURACY, TAGS.COMPLIANCE, TAGS.TIMELINESS],
     choices: [
       {
         id: "A",
@@ -543,10 +562,13 @@ const scenarioSection = document.getElementById("scenario-section");
 const resultSection = document.getElementById("result-section");
 const scenarioTitleEl = document.getElementById("scenario-title");
 const scenarioDescriptionEl = document.getElementById("scenario-description");
+const scenarioTagsEl = document.getElementById("scenario-tags");
 const choicesContainerEl = document.getElementById("choices-container");
 const outcomeEl = document.getElementById("outcome");
 const nextButtonEl = document.getElementById("next-button");
 const resultTitleEl = document.getElementById("result-title");
+const resultDescriptionEl = document.getElementById("result-description");
+const resultSummaryEl = document.getElementById("result-summary");
 const progressLabelEl = document.getElementById("progress-label");
 const progressFillEl = document.getElementById("progress-fill");
 const downloadImageButtonEl = document.getElementById("download-image-button");
@@ -587,6 +609,19 @@ function renderScenario() {
   scenarioTitleEl.textContent = `Scenario ${scenario.id}: ${scenario.title}`;
   scenarioDescriptionEl.textContent = scenario.description;
 
+  // Scenario tags / icons
+  if (scenarioTagsEl) {
+    scenarioTagsEl.innerHTML = "";
+    if (scenario.tags && scenario.tags.length) {
+      scenario.tags.forEach((tagText) => {
+        const tag = document.createElement("span");
+        tag.className = "scenario-tag";
+        tag.textContent = tagText;
+        scenarioTagsEl.appendChild(tag);
+      });
+    }
+  }
+
   choicesContainerEl.innerHTML = "";
   outcomeEl.textContent = "";
   outcomeEl.classList.add("hidden");
@@ -620,14 +655,31 @@ function handleChoiceClick(choice) {
   nextButtonEl.classList.remove("hidden");
 }
 
-function handleNextScenario() {
-  currentScenarioIndex += 1;
+// small fade between scenarios
+const SCENARIO_FADE_MS = 200;
 
-  if (currentScenarioIndex >= scenarios.length) {
-    renderResult();
-  } else {
-    renderScenario();
+function handleNextScenario() {
+  // add fade-out class
+  if (scenarioSection) {
+    scenarioSection.classList.add("fade-out");
   }
+
+  setTimeout(() => {
+    currentScenarioIndex += 1;
+
+    if (currentScenarioIndex >= scenarios.length) {
+      if (scenarioSection) {
+        scenarioSection.classList.remove("fade-out");
+      }
+      renderResult();
+    } else {
+      renderScenario();
+      if (scenarioSection) {
+        // remove fade-out to reveal next scenario
+        scenarioSection.classList.remove("fade-out");
+      }
+    }
+  }, SCENARIO_FADE_MS);
 }
 
 if (nextButtonEl) {
@@ -691,7 +743,58 @@ function determineArchetype(stats) {
       break;
   }
 
-  return { title, description, dominantDimension: dominant };
+  return { title, description, dominantDimension: dominant, dimensions };
+}
+
+// personalised micro-summary based on top two stats
+const DIMENSION_META = {
+  accuracy: {
+    label: "Accuracy",
+    tone: "dig into root causes and correctness",
+  },
+  safeCompliance: {
+    label: "Compliance Focus",
+    tone: "protect the organisation from regulatory and statutory risk",
+  },
+  teamMorale: {
+    label: "Team Morale",
+    tone: "keep an eye on team wellbeing and sustainability",
+  },
+  leadershipTrust: {
+    label: "Leadership Trust",
+    tone: "align with senior stakeholders and manage expectations",
+  },
+  timeliness: {
+    label: "Timeliness",
+    tone: "prioritise cycle-critical actions and on-time delivery",
+  },
+  relationships: {
+    label: "Cross-Functional Relationships",
+    tone: "build bridges across HR, Finance, and in-country providers",
+  },
+};
+
+function buildPersonalisedSummary(dimensions) {
+  // dimensions = same structure as in determineArchetype
+  const sorted = [...dimensions].sort((a, b) => b.value - a.value);
+  const top1 = sorted[0];
+  const top2 = sorted[1];
+
+  // if everything is basically flat, show balanced message
+  if (!top1 || (top1.value === 0 && (!top2 || top2.value === 0))) {
+    return "You show a fairly balanced approach across timeliness, compliance, relationships, delivery and leadership – no single tendency dominates.";
+  }
+
+  const meta1 = DIMENSION_META[top1.key];
+  const meta2 = top2 ? DIMENSION_META[top2.key] : null;
+
+  if (meta1 && meta2) {
+    return `You lead with ${meta1.label} and ${meta2.label}, tending to ${meta1.tone} while also ${meta2.tone}.`;
+  }
+  if (meta1) {
+    return `You lead with ${meta1.label}, tending to ${meta1.tone}.`;
+  }
+  return "";
 }
 
 // =======================================
@@ -726,7 +829,7 @@ function updateAggregateStats() {
 }
 
 // =======================================
-// SCORE BANDS
+// SCORE BANDS (used in image)
 // =======================================
 
 function scoreToBandLabel(value) {
@@ -753,6 +856,15 @@ function renderResult() {
 
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
+
+  if (resultDescriptionEl) {
+    resultDescriptionEl.textContent = latestArchetype.description;
+  }
+
+  if (resultSummaryEl) {
+    const summary = buildPersonalisedSummary(latestArchetype.dimensions);
+    resultSummaryEl.textContent = summary;
+  }
 
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
