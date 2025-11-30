@@ -998,3 +998,24 @@ if (downloadImageButtonEl) {
 
 // Start game on load
 renderScenario();
+
+// =====================
+// FIREBASE INIT
+// =====================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyXWxr4arF2lVN9K2k_PRkP4Q9zEZylra0",
+  authDomain: "payrollmanagersim.firebaseapp.com",
+  projectId: "payrollmanagersim",
+  storageBucket: "payrollmanagersim.appspot.com",
+  messagingSenderId: "292697378420",
+  appId: "1:292697378420:web:4b91bf27593b5d39165821",
+  measurementId: "G-MX0N4WLCM5"
+};
+
+// Use the COMPAT SDK (because index.html uses firebase-app-compat.js)
+firebase.initializeApp(firebaseConfig);
+
+// Firestore reference
+const db = firebase.firestore();
+const increment = firebase.firestore.FieldValue.increment;
