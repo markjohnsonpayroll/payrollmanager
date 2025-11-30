@@ -708,42 +708,42 @@ function determineArchetype(stats) {
 
   let title = "Balanced Operator";
   let description =
-    "You balance accuracy, risk, relationships, and deadlines. No single dimension dominates your style.";
+    "You balance accuracy, risk, relationships, and deadlines. No single dimension dominates your style, so you tend to flex based on what the situation needs.";
 
   switch (dominant.key) {
     case "accuracy":
       title = "The Data Detective";
       description =
-        "You care deeply about correctness and root-cause analysis. You’re the one who actually knows why the numbers are what they are.";
+        "Your first instinct is to stabilise the numbers. You bring order to noisy data and look for patterns, making it harder for issues to hide in the details.";
       break;
     case "safeCompliance":
       title = "The Enforcer";
       description =
-        "Compliance is non-negotiable. You protect the company from regulatory risk, even if it means saying no to pressure.";
+        "You anchor decisions around legal, tax, and statutory risk. You’re comfortable pushing back when something threatens compliance or control.";
       break;
     case "teamMorale":
       title = "The Protector";
       description =
-        "You shield your team from chaos and burnout. You know that sustainable delivery depends on people, not heroics.";
+        "You’re highly tuned into workload, burnout, and resilience. You’d rather build a sustainable payroll engine than chase short-term heroics.";
       break;
     case "leadershipTrust":
       title = "The Politician";
       description =
-        "You manage upwards effectively, building trust and influence at senior levels to get payroll what it needs.";
+        "You instinctively think in narratives, stakeholders, and optics. You focus on maintaining confidence at senior levels so payroll keeps its seat at the table.";
       break;
     case "timeliness":
       title = "The Operator";
       description =
-        "You keep payroll running on time. Cut-offs, SLAs, and on-time pay are your anchor.";
+        "You see payroll as a non-negotiable service. Hitting cut-offs, approvals, and pay days is your north star, and you organise everything around that rhythm.";
       break;
     case "relationships":
       title = "The Diplomat";
       description =
-        "You invest heavily in cross-functional relationships. HR, Finance, and providers see you as a partner, not a blocker.";
+        "You treat payroll as a team sport. You invest heavily in your relationships with HR, Finance, and providers so collaboration stays high even when pressure spikes.";
       break;
   }
 
-  return { title, description, dominantDimension: dominant, dimensions };
+  return { title, description, dominantDimension: dominant };
 }
 
 // personalised micro-summary based on top two stats
@@ -1071,14 +1071,16 @@ function generateResultImage() {
 
   nextY += 10;
 
-  // ===== RADAR + STATS BLOCK =====
+  // ===== RADAR + "TABLE" BLOCK =====
   const blockTop = nextY + 10;
-  const blockBottom = innerBottom - 50; // leave room for footer
+  const blockBottom = innerBottom - 60; // leave more room for footer
   const blockHeight = blockBottom - blockTop;
 
   const radarRadius = 115;
+
+  // Shift radar + stats slightly right to reduce empty space on the left
   const radarCenterY = blockTop + blockHeight / 2;
-  const radarCenterX = innerLeft + radarRadius + 20;
+  const radarCenterX = innerLeft + radarRadius + 80;
 
   // Prepare values for radar (normalised)
   const safeCompliance = -currentStats.complianceRisk;
@@ -1105,16 +1107,36 @@ function generateResultImage() {
     borderColor
   );
 
-  // Stats text on the right as banded descriptors
-  const statsX = radarCenterX + radarRadius + 60;
-  let statsY = blockTop + (blockHeight - 6 * 26) / 2;
+  // ===== KEY TENDENCIES AS A TABLE =====
+  const tableX = radarCenterX + radarRadius + 80;
+  let tableY = blockTop + 24;
 
+  // Header
   ctx.font = "22px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#F9FAFB";
-  ctx.fillText("Key tendencies", statsX, statsY);
-  statsY += 32;
+  ctx.fillText("Key tendencies", tableX, tableY);
+  tableY += 30;
 
-  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  // Column headings
+  ctx.font = "16px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  const colGap = 210; // space between label & band
+  ctx.fillText("Dimension", tableX, tableY);
+  ctx.fillText("Profile", tableX + colGap, tableY);
+  tableY += 6;
+
+  // Header underline
+  ctx.strokeStyle = "#111827";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(tableX, tableY + 6);
+  ctx.lineTo(tableX + colGap + 220, tableY + 6);
+  ctx.stroke();
+
+  tableY += 18;
+
+  // Rows
+  ctx.font = "18px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
 
   const statDescriptors = [
@@ -1127,14 +1149,24 @@ function generateResultImage() {
   ];
 
   statDescriptors.forEach((s) => {
-    const line = `${s.label}: ${scoreToBandLabel(s.score)}`;
-    ctx.fillText(line, statsX, statsY);
-    statsY += 26;
+    const band = scoreToBandLabel(s.score);
+
+    // label
+    ctx.fillStyle = "#E5E7EB";
+    ctx.fillText(s.label, tableX, tableY);
+
+    // band value in slightly brighter colour
+    ctx.fillStyle = "#BFDBFE";
+    ctx.fillText(band, tableX + colGap, tableY);
+
+    tableY += 26;
   });
 
-  // ===== BRANDED FOOTER =====
+  // ===== BRANDED FOOTER (WITH MORE BOTTOM PADDING) =====
   const gameUrl = window.location.href.split("#")[0];
-  const footerY = innerBottom - 16;
+
+  // give extra breathing room above the border
+  const footerY = innerBottom - 40;
 
   // subtle divider line
   ctx.strokeStyle = "#111827";
@@ -1147,12 +1179,12 @@ function generateResultImage() {
   // branding text
   ctx.font = "16px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
-  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 24);
+  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 22);
 
   ctx.font = "14px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#9CA3AF";
   const cleanUrl = gameUrl.replace(/^https?:\/\//, "");
-  ctx.fillText(cleanUrl, innerLeft, footerY + 44);
+  ctx.fillText(cleanUrl, innerLeft, footerY + 40);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
