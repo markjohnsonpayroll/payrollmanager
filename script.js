@@ -860,7 +860,7 @@ function generateResultImage() {
   const innerBottom = height - cardMargin - 40;
   const contentWidth = innerRight - innerLeft;
 
-  // Title – Inter Black
+  // ===== TITLE =====
   const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
   ctx.lineJoin = "round";
@@ -869,7 +869,7 @@ function generateResultImage() {
 
   const titleWidth = ctx.measureText(title).width;
   const titleX = innerLeft + (contentWidth - titleWidth) / 2;
-  const titleY = innerTop + 16;
+  const titleY = innerTop + 10;
 
   ctx.lineWidth = 6;
   ctx.strokeStyle = "#020617";
@@ -878,11 +878,11 @@ function generateResultImage() {
   ctx.fillStyle = "#F9FAFB";
   ctx.fillText(title, titleX, titleY);
 
-  // Description – Inter Regular
+  // ===== DESCRIPTION =====
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
   const descX = innerLeft;
-  const descY = titleY + 80;
+  const descY = titleY + 70;
   const descWidth = contentWidth;
 
   let nextY = drawWrappedText(
@@ -894,12 +894,16 @@ function generateResultImage() {
     28
   );
 
-  nextY += 16;
+  nextY += 10;
 
-  // Radar + stats area
-  const radarRadius = 110;
-  const radarCenterX = innerLeft + radarRadius + 10;
-  const radarCenterY = innerBottom - radarRadius - 10;
+  // ===== RADAR + STATS BLOCK =====
+  const blockTop = nextY + 10;
+  const blockBottom = innerBottom - 15;
+  const blockHeight = blockBottom - blockTop;
+
+  const radarRadius = 115;
+  const radarCenterY = blockTop + blockHeight / 2;
+  const radarCenterX = innerLeft + radarRadius + 20;
 
   // Prepare values for radar (normalised)
   const safeCompliance = -currentStats.complianceRisk;
@@ -927,9 +931,9 @@ function generateResultImage() {
     borderColor
   );
 
-  // Stats text on the right
+  // Stats text on the right, vertically centred with radar block
   const statsX = radarCenterX + radarRadius + 60;
-  let statsY = radarCenterY - radarRadius + 10;
+  let statsY = blockTop + (blockHeight - 6 * 26) / 2; // centre 6 lines approx
 
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
@@ -945,10 +949,10 @@ function generateResultImage() {
 
   statLines.forEach((line) => {
     ctx.fillText(line, statsX, statsY);
-    statsY += 28;
+    statsY += 26;
   });
 
-  // Footer URL
+  // ===== FOOTER URL =====
   const gameUrl = window.location.href.split("#")[0];
   ctx.font = "17px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#9CA3AF";
@@ -961,6 +965,7 @@ function generateResultImage() {
     resultImageEl.classList.remove("hidden");
   }
 }
+
 
 // =======================================
 // DOWNLOAD HANDLER
