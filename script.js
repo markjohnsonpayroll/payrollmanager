@@ -536,6 +536,7 @@ let currentScenarioIndex = 0;
 let hasChosenInScenario = false;
 let latestArchetype = null;
 let generatedImageDataUrl = null;
+let answerChoices = []; // stores "A"/"B"/"C" for each scenario
 
 // DOM elements
 const scenarioSection = document.getElementById("scenario-section");
@@ -597,6 +598,9 @@ function renderScenario() {
 function handleChoiceClick(choice) {
   if (hasChosenInScenario) return;
   hasChosenInScenario = true;
+
+  // record which option was chosen for this scenario (A/B/C)
+  answerChoices[currentScenarioIndex] = choice.id;
 
   const buttons = choicesContainerEl.querySelectorAll("button");
   buttons.forEach((btn) => btn.classList.add("disabled"));
@@ -681,7 +685,42 @@ function determineArchetype(stats) {
   return { title, description, dominantDimension: dominant };
 }
 
+// =======================================
+// FIREBASE AGGREGATE LOGGING
+// =======================================
+
+function updateAggregateStats() {
+  if (!latestArchetype) return;
+
+  const statsDoc = db.collection("stats").doc("global");
+
+  const updates = {
+    totalGames: increment(1),
+  };
+
+  // Archetype counter, e.g. archetype_TheOperator
+  const archKey = `archetype_${latestArchetype.title.replace(/\s+/g, "")}`;
+  updates[archKey] = increment(1);
+
+  // Scenario answer counters: scenario1_A, scenario2_B, etc.
+  answerChoices.forEach((ans, idx) => {
+    if (!ans) return;
+    const scenarioNumber = idx + 1;
+    const field = `scenario${scenarioNumber}_${ans}`;
+    updates[field] = increment(1);
+  });
+
+  statsDoc.set(updates, { merge: true }).catch((err) => {
+    console.error("Failed to update aggregate stats:", err);
+  });
+}
+
+// =======================================
+// RESULT RENDER / IMAGE
+// =======================================
+
 function renderResult() {
+  // only called once all 10 scenarios have been answered
   scenarioSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
 
@@ -696,6 +735,9 @@ function renderResult() {
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
   }
+
+  // log to Firestore (aggregated stats only)
+  updateAggregateStats();
 
   // Generate the image once fonts are ready
   if (document.fonts && document.fonts.load) {
@@ -966,7 +1008,6 @@ function generateResultImage() {
   }
 }
 
-
 // =======================================
 // DOWNLOAD HANDLER
 // =======================================
@@ -1010,7 +1051,7 @@ const firebaseConfig = {
   storageBucket: "payrollmanagersim.appspot.com",
   messagingSenderId: "292697378420",
   appId: "1:292697378420:web:4b91bf27593b5d39165821",
-  measurementId: "G-MX0N4WLCM5"
+  measurementId: "G-MX0N4WLCM5",
 };
 
 // Use the COMPAT SDK (because index.html uses firebase-app-compat.js)
