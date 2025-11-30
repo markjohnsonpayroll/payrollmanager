@@ -987,9 +987,11 @@ function generateResultImage() {
   const borderColor =
     BORDER_COLORS[latestArchetype.title] || BORDER_COLORS["The Operator"];
 
+  // Outer coloured border
   ctx.fillStyle = borderColor;
   ctx.fillRect(0, 0, width, height);
 
+  // White frame
   const frameMargin = 28;
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(
@@ -999,6 +1001,7 @@ function generateResultImage() {
     height - frameMargin * 2
   );
 
+  // Inner dark card
   const cardMargin = frameMargin + 8;
   ctx.fillStyle = "#020617";
   ctx.fillRect(
@@ -1014,10 +1017,11 @@ function generateResultImage() {
   const innerBottom = height - cardMargin - 40;
   const contentWidth = innerRight - innerLeft;
 
-  // Title
+  // ===== TITLE =====
   const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
   ctx.lineJoin = "round";
+
   ctx.font = "900 56px 'Inter', system-ui, sans-serif";
   const titleWidth = ctx.measureText(title).width;
   const titleX = innerLeft + (contentWidth - titleWidth) / 2;
@@ -1026,10 +1030,11 @@ function generateResultImage() {
   ctx.lineWidth = 6;
   ctx.strokeStyle = "#020617";
   ctx.strokeText(title, titleX, titleY);
+
   ctx.fillStyle = "#F9FAFB";
   ctx.fillText(title, titleX, titleY);
 
-  // Archetype description + personalised summary
+  // ===== DESCRIPTION + PERSONALISED SUMMARY =====
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
 
@@ -1061,16 +1066,27 @@ function generateResultImage() {
     );
   }
 
-  nextY += 10;
+  // Add a bit more padding before we start the radar block
+  nextY += 30;
 
-  // Radar + table block
-  const blockTop = nextY + 10;
+  // ===== RADAR BLOCK (CENTERED) =====
+  const blockTop = nextY;
   const blockBottom = innerBottom - 60;
   const blockHeight = blockBottom - blockTop;
 
-  const radarRadius = 115;
-  const radarCenterY = blockTop + blockHeight / 2;
-  const radarCenterX = innerLeft + radarRadius + 20;
+  // Optional small label above the radar
+  ctx.font = "18px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+  const radarLabel = "Profile across key dimensions";
+  const radarLabelWidth = ctx.measureText(radarLabel).width;
+  const radarLabelX = innerLeft + (contentWidth - radarLabelWidth) / 2;
+  const radarLabelY = blockTop;
+  ctx.fillText(radarLabel, radarLabelX, radarLabelY);
+
+  const radarRadius = 135;
+  const radarCenterX = innerLeft + contentWidth / 2;
+  const radarCenterY =
+    radarLabelY + 40 + (blockBottom - (radarLabelY + 40)) / 2;
 
   const safeCompliance = -currentStats.complianceRisk;
   const rawValues = [
@@ -1094,80 +1110,7 @@ function generateResultImage() {
     borderColor
   );
 
-  // Key tendencies table
-  const tableLeft = radarCenterX + radarRadius + 70;
-  const tableTop = blockTop + 12;
-  const tableWidth = innerRight - tableLeft;
-  const rowHeight = 26;
-  const headerHeight = 30;
-  const rows = [
-    { label: "Accuracy", score: currentStats.accuracy },
-    { label: "Timeliness", score: currentStats.timeliness },
-    { label: "Team Morale", score: currentStats.teamMorale },
-    { label: "Relationships", score: currentStats.relationships },
-    { label: "Leadership Trust", score: currentStats.leadershipTrust },
-    { label: "Compliance Focus", score: safeCompliance },
-  ];
-
-  ctx.font = "22px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#F9FAFB";
-  ctx.fillText("Key tendencies", tableLeft, tableTop - 8);
-
-  // Table outline
-  const tableBodyTop = tableTop + 10;
-  const tableBodyBottom = tableBodyTop + headerHeight + rows.length * rowHeight;
-  const tableRight = tableLeft + tableWidth;
-
-  ctx.strokeStyle = "rgba(148, 163, 184, 0.25)";
-  ctx.lineWidth = 1;
-
-  ctx.beginPath();
-  ctx.moveTo(tableLeft, tableBodyTop);
-  ctx.lineTo(tableRight, tableBodyTop);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(tableLeft, tableBodyBottom);
-  ctx.lineTo(tableRight, tableBodyBottom);
-  ctx.stroke();
-
-  const colSplit = tableLeft + tableWidth * 0.45;
-
-  ctx.beginPath();
-  ctx.moveTo(colSplit, tableBodyTop);
-  ctx.lineTo(colSplit, tableBodyBottom);
-  ctx.stroke();
-
-  // Header
-  ctx.font = "14px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#9CA3AF";
-  ctx.fillText("Dimension", tableLeft + 4, tableBodyTop + 20);
-  ctx.fillText("Profile", colSplit + 4, tableBodyTop + 20);
-
-  ctx.beginPath();
-  ctx.moveTo(tableLeft, tableBodyTop + headerHeight);
-  ctx.lineTo(tableRight, tableBodyTop + headerHeight);
-  ctx.stroke();
-
-  // Rows
-  ctx.font = "16px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#E5E7EB";
-
-  rows.forEach((row, index) => {
-    const y = tableBodyTop + headerHeight + (index + 1) * rowHeight;
-    const textY = y - 6;
-
-    ctx.fillText(row.label, tableLeft + 4, textY);
-    ctx.fillText(scoreToBandLabel(row.score), colSplit + 4, textY);
-
-    ctx.strokeStyle = "rgba(31, 41, 55, 0.7)";
-    ctx.beginPath();
-    ctx.moveTo(tableLeft, y);
-    ctx.lineTo(tableRight, y);
-    ctx.stroke();
-  });
-
-  // BRANDED FOOTER
+  // ===== BRANDED FOOTER =====
   const gameUrl = window.location.href.split("#")[0];
   const footerY = innerBottom - 18;
 
@@ -1194,6 +1137,7 @@ function generateResultImage() {
     resultImageEl.classList.remove("hidden");
   }
 }
+
 
 // =======================================
 // DOWNLOAD & COPY TEXT HANDLERS
