@@ -574,6 +574,8 @@ const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
 const personalisedSummaryEl = document.getElementById("personalised-summary");
 const archetypeDescriptionEl = document.querySelector(".result-archetype-description");
+const copyShareButtonEl = document.getElementById("copy-share-button");
+const shareTextPreviewEl = document.getElementById("share-text-preview");
 
 // Intro / start
 const introSection = document.getElementById("intro-section");
@@ -844,6 +846,11 @@ function renderResult() {
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
 
+    // Update share text preview
+  if (shareTextPreviewEl) {
+    shareTextPreviewEl.textContent = buildShareText();
+  }
+  
   if (archetypeDescriptionEl) {
     archetypeDescriptionEl.textContent = latestArchetype.description;
   }
@@ -1158,7 +1165,7 @@ function generateResultImage() {
 }
 
 // =======================================
-// DOWNLOAD & COPY TEXT HANDLERS
+// DOWNLOAD & SHARE HANDLERS
 // =======================================
 
 function handleDownloadImageClick() {
@@ -1178,7 +1185,7 @@ function handleDownloadImageClick() {
 
   if (shareStatusEl) {
     shareStatusEl.textContent =
-      "Result image downloaded. Add it to your LinkedIn post along with the copied text.";
+      "Image downloaded. Attach it to your LinkedIn post along with the text below.";
   }
 }
 
@@ -1186,36 +1193,46 @@ if (downloadImageButtonEl) {
   downloadImageButtonEl.addEventListener("click", handleDownloadImageClick);
 }
 
+// Canonical URL (no hash etc)
 function getCanonicalGameUrl() {
   return window.location.href.split("#")[0];
 }
 
-// Copy ready-to-paste LinkedIn text
-async function handleCopyResultTextClick() {
-  if (!latestArchetype) return;
+// Build the share text shown + copied
+function buildShareText() {
+  if (!latestArchetype) return "";
 
   const url = getCanonicalGameUrl();
-  const text =
-    `I just played the Payroll Manager Simulator and my result was **${latestArchetype.title}**.\n\n` +
-    `It’s a 10-scenario decision game for payroll managers – no signup, just choices.\n\n` +
-    `${url}\n#PayrollManagerSimulator`;
+
+  return (
+    `I just played the Payroll Manager Simulator and came out as "${latestArchetype.title}".\n` +
+    `It’s a 10-scenario game about how you run global payroll under pressure.\n\n` +
+    `Play it here: ${url}\n` +
+    `#PayrollManagerSimulator`
+  );
+}
+
+async function handleCopyShareTextClick() {
+  const text = buildShareText();
+  if (!text) return;
 
   try {
     await navigator.clipboard.writeText(text);
     if (shareStatusEl) {
-      shareStatusEl.textContent = "Share text copied. Paste it into your LinkedIn post.";
+      shareStatusEl.textContent = "Result text copied. Paste it into your LinkedIn post.";
     }
   } catch (err) {
     if (shareStatusEl) {
       shareStatusEl.textContent =
-        "Couldn’t copy automatically – select and copy manually instead.";
+        "Couldn’t copy automatically – please select and copy the text manually.";
     }
   }
 }
 
-if (copyTextButtonEl) {
-  copyTextButtonEl.addEventListener("click", handleCopyResultTextClick);
+if (copyShareButtonEl) {
+  copyShareButtonEl.addEventListener("click", handleCopyShareTextClick);
 }
+
 
 // =======================================
 // INTRO START BUTTON HANDLER
