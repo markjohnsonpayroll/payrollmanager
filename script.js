@@ -700,9 +700,11 @@ function renderResult() {
   scenarioSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
 
-  if (progressTextEl) {
-    progressTextEl.textContent = "Game complete";
+  if (progressLabelEl && progressFillEl) {
+    progressLabelEl.textContent = "Game complete";
+    progressFillEl.style.width = "100%";
   }
+
 
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
