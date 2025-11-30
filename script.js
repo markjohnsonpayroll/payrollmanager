@@ -13,6 +13,17 @@ const INITIAL_STATS = {
   relationships: 0,
 };
 
+// Colourful borders per archetype for the result image
+const BORDER_COLORS = {
+  "The Operator": "#2768A6",
+  "The Enforcer": "#C62828",
+  "The Protector": "#248F8D",
+  "The Politician": "#1B2A49",
+  "The Diplomat": "#6A2AA0",
+  "The Data Detective": "#1976D2",
+};
+
+// Scenario data
 const scenarios = [
   {
     id: 1,
@@ -533,6 +544,7 @@ let currentStats = { ...INITIAL_STATS };
 let currentScenarioIndex = 0;
 let hasChosenInScenario = false;
 let latestArchetype = null;
+let generatedImageDataUrl = null;
 
 // DOM elements
 const scenarioSection = document.getElementById("scenario-section");
@@ -546,9 +558,9 @@ const resultTitleEl = document.getElementById("result-title");
 const resultDescriptionEl = document.getElementById("result-description");
 const statsListEl = document.getElementById("stats-list");
 const progressTextEl = document.getElementById("progress-text");
-const shareButtonEl = document.getElementById("share-button");
 const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
+const resultImageEl = document.getElementById("result-image");
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -707,64 +719,20 @@ function renderResult() {
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
   }
-}
 
-// =======================================
-// LINKEDIN SHARE (LINK + COPIED TEXT)
-// =======================================
-
-function handleShareClick() {
-  if (!latestArchetype) {
-    latestArchetype = determineArchetype(currentStats);
+  // Generate the image once fonts are ready
+  if (document.fonts && document.fonts.load) {
+    document.fonts
+      .load("700 54px 'Lilita One'")
+      .then(generateResultImage)
+      .catch(generateResultImage);
+  } else {
+    generateResultImage();
   }
-
-  const gameUrl = window.location.href.split("#")[0];
-  const shareText =
-    `I just completed the Payroll Manager Simulator and got "${latestArchetype.title}". ` +
-    `If you work in payroll, try it and see what kind of payroll manager you are: ${gameUrl}`;
-
-  const encodedUrl = encodeURIComponent(gameUrl);
-  const linkedinUrl =
-    `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
-
-  // 1. Open LinkedIn first so popup isn't blocked
-  window.open(linkedinUrl, "_blank");
-
-  // 2. Status text
-  if (shareStatusEl) {
-    shareStatusEl.textContent = "LinkedIn opened. Preparing clipboard text…";
-  }
-
-  // 3. Copy to clipboard on next tick
-  setTimeout(() => {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(shareText).then(
-        () => {
-          if (shareStatusEl) {
-            shareStatusEl.textContent =
-              "LinkedIn opened. Your result text is copied — paste it into the post box, attach the image if you like, and publish.";
-          }
-        },
-        () => {
-          if (shareStatusEl) {
-            shareStatusEl.textContent =
-              "LinkedIn opened, but clipboard copy was blocked. Just type your own message and attach the image if you downloaded it.";
-          }
-        }
-      );
-    } else if (shareStatusEl) {
-      shareStatusEl.textContent =
-        "LinkedIn opened. Clipboard not supported — just type your own message and attach the image if you downloaded it.";
-    }
-  }, 50);
-}
-
-if (shareButtonEl) {
-  shareButtonEl.addEventListener("click", handleShareClick);
 }
 
 // =======================================
-// RESULT IMAGE GENERATION (PNG DOWNLOAD)
+// CANVAS TEXT HELPERS
 // =======================================
 
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -790,47 +758,69 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
   }
 }
 
-function handleDownloadImageClick() {
-  if (!latestArchetype) {
-    latestArchetype = determineArchetype(currentStats);
-  }
+// =======================================
+// RESULT IMAGE GENERATION
+// =======================================
 
-  const canvas = document.createElement("canvas");
+function generateResultImage() {
+  if (!latestArchetype) return;
+
   const width = 1200;
   const height = 628;
+  const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
 
-  // Background gradient
-  const gradient = ctx.createLinearGradient(0, 0, width, height);
-  gradient.addColorStop(0, "#020617");
-  gradient.addColorStop(0.5, "#111827");
-  gradient.addColorStop(1, "#0b1120");
-  ctx.fillStyle = gradient;
+  // Chunky outer border in archetype colour
+  const borderColor =
+    BORDER_COLORS[latestArchetype.title] || BORDER_COLORS["The Operator"];
+
+  ctx.fillStyle = borderColor;
   ctx.fillRect(0, 0, width, height);
 
-  // Title
-  ctx.fillStyle = "#e5e7eb";
-  ctx.font = "bold 42px system-ui";
+  // Inner dark border
+  ctx.fillStyle = "#2E2A33";
+  ctx.fillRect(40, 40, width - 80, height - 80);
+
+  // White content panel
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(60, 60, width - 120, height - 120);
+
+  // Title – Lilita One with outline
+  const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
-  ctx.fillText("Payroll Manager Simulator", 60, 50);
+  ctx.lineJoin = "round";
 
-  // Archetype
-  ctx.font = "bold 38px system-ui";
-  ctx.fillStyle = "#60a5fa";
-  ctx.fillText(`Result: ${latestArchetype.title}`, 60, 120);
+  ctx.font = "bold 54px 'Lilita One', system-ui, sans-serif";
 
-  // Description
-  ctx.font = "24px system-ui";
-  ctx.fillStyle = "#cbd5f5";
+  // Centered horizontally within the white panel
+  const titleWidth = ctx.measureText(title).width;
+  const titleX = 60 + (width - 120 - titleWidth) / 2;
+  const titleY = 80;
+
+  // Outline
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = "#111827";
+  ctx.strokeText(title, titleX, titleY);
+
+  // Fill
+  ctx.fillStyle = borderColor;
+  ctx.fillText(title, titleX, titleY);
+
+  // Description – Inter
+  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#111827";
+  const descX = 90;
+  const descY = 160;
+  const descWidth = width - 180;
   drawWrappedText(
     ctx,
     latestArchetype.description,
-    60,
-    180,
-    width - 120,
-    32
+    descX,
+    descY,
+    descWidth,
+    28
   );
 
   // Stats block
@@ -843,26 +833,46 @@ function handleDownloadImageClick() {
     `Cross-Functional Relationships: ${currentStats.relationships}`,
   ];
 
-  ctx.font = "22px system-ui";
-  ctx.fillStyle = "#e5e7eb";
-  let statsY = 340;
-  for (const line of statLines) {
-    ctx.fillText(line, 60, statsY);
-    statsY += 30;
-  }
+  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#111827";
+  let statsY = 290;
+  statLines.forEach((line) => {
+    ctx.fillText(line, 90, statsY);
+    statsY += 28;
+  });
 
-  // Footer link
+  // Footer URL
   const gameUrl = window.location.href.split("#")[0];
-  ctx.font = "18px system-ui";
-  ctx.fillStyle = "#9ca3af";
-  ctx.fillText(gameUrl, 60, height - 60);
+  ctx.font = "18px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#6B7280";
+  ctx.fillText(gameUrl, 90, height - 80);
+
+  generatedImageDataUrl = canvas.toDataURL("image/png");
+
+  if (resultImageEl) {
+    resultImageEl.src = generatedImageDataUrl;
+    resultImageEl.classList.remove("hidden");
+  }
+}
+
+// =======================================
+// DOWNLOAD HANDLER
+// =======================================
+
+function handleDownloadImageClick() {
+  if (!generatedImageDataUrl) {
+    generateResultImage();
+  }
+  if (!generatedImageDataUrl) return;
 
   const link = document.createElement("a");
   link.download = `payroll-manager-${latestArchetype.title
     .replace(/\s+/g, "-")
     .toLowerCase()}.png`;
-  link.href = canvas.toDataURL("image/png");
+  link.href = generatedImageDataUrl;
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
 
   if (shareStatusEl) {
     shareStatusEl.textContent =
