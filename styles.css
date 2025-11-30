@@ -244,21 +244,25 @@ body {
   outline-offset: 2px;
 }
 
+/* Remove glow from primary/blue buttons */
 .btn-primary,
 .hero-cta,
-.primary-btn {
+.primary-btn,
+.choices-container .btn {
   background: linear-gradient(90deg, #2563eb, #1d4ed8);
   color: #f9fafb;
-  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
+  box-shadow: none;            /* <<< NO GLOW */
 }
 
 .btn-primary:hover,
 .hero-cta:hover,
-.primary-btn:hover {
+.primary-btn:hover,
+.choices-container .btn:hover {
   background: linear-gradient(90deg, #1d4ed8, #1d4ed8);
   transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+  box-shadow: none;            /* <<< NO GLOW */
 }
+
 
 .btn-secondary,
 .secondary-btn {
@@ -411,14 +415,6 @@ body {
   color: #e5e7eb;
 }
 
-.share-actions {
-  display: flex;
-  flex-direction: column-reverse; /* Copy visually below text */
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 8px;
-}
-
 .share-text {
   width: 100%;
   margin-top: 8px;
@@ -435,6 +431,29 @@ body {
   min-height: 120px;
   white-space: pre-wrap;
   overflow: auto;
+}
+
+.share-actions {
+  display: flex;
+  flex-direction: column; /* Copy visually below text */
+  align-items: stretch;
+  gap: 12px;
+}
+
+/* Make the copy button a dark pill (not blue) */
+.copy-btn,
+#copy-link-button {
+  background: rgba(15, 23, 42, 0.92);
+  color: var(--text-main);
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  box-shadow: none;
+}
+
+.copy-btn:hover,
+#copy-link-button:hover {
+  background: rgba(15, 23, 42, 0.98);
+  transform: translateY(-1px);
+  border-color: rgba(75, 85, 99, 0.9);
 }
 
 .share-status {
