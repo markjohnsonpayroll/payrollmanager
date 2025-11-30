@@ -739,6 +739,15 @@ function renderResult() {
   // log to Firestore (aggregated stats only)
   updateAggregateStats();
 
+  // convert scores to bands
+  function scoreToBandLabel(value) {
+  if (value <= -6) return "Needs focus";
+  if (value <= -2) return "Emerging";
+  if (value <= 1) return "Balanced";
+  if (value <= 5) return "Strong";
+  return "Signature strength";
+  }
+  
   // Generate the image once fonts are ready
   if (document.fonts && document.fonts.load) {
     document.fonts
@@ -973,23 +982,30 @@ function generateResultImage() {
     borderColor
   );
 
-  // Stats text on the right, vertically centred with radar block
+  // ===== STATS TEXT (LABELS, NOT NUMBERS) =====
   const statsX = radarCenterX + radarRadius + 60;
-  let statsY = blockTop + (blockHeight - 6 * 26) / 2; // centre 6 lines approx
+  let statsY = blockTop + (blockHeight - 6 * 26) / 2;
+
+  // Heading
+  ctx.font = "22px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#F9FAFB";
+  ctx.fillText("Key tendencies", statsX, statsY);
+  statsY += 32;
 
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
 
-  const statLines = [
-    `Team Morale: ${currentStats.teamMorale}`,
-    `Compliance Risk (lower is better): ${currentStats.complianceRisk}`,
-    `Leadership Trust: ${currentStats.leadershipTrust}`,
-    `Accuracy: ${currentStats.accuracy}`,
-    `Timeliness: ${currentStats.timeliness}`,
-    `Cross-Functional Relationships: ${currentStats.relationships}`,
+  const statDescriptors = [
+    { label: "Accuracy", score: currentStats.accuracy },
+    { label: "Timeliness", score: currentStats.timeliness },
+    { label: "Team Morale", score: currentStats.teamMorale },
+    { label: "Cross-Functional Relationships", score: currentStats.relationships },
+    { label: "Leadership Trust", score: currentStats.leadershipTrust },
+    { label: "Compliance Focus", score: safeCompliance },
   ];
 
-  statLines.forEach((line) => {
+  statDescriptors.forEach((s) => {
+    const line = `${s.label}: ${scoreToBandLabel(s.score)}`;
     ctx.fillText(line, statsX, statsY);
     statsY += 26;
   });
@@ -1007,6 +1023,7 @@ function generateResultImage() {
     resultImageEl.classList.remove("hidden");
   }
 }
+
 
 // =======================================
 // DOWNLOAD HANDLER
