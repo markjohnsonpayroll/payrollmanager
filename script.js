@@ -15,15 +15,15 @@ const INITIAL_STATS = {
 
 // Colourful borders per archetype for the result image
 const BORDER_COLORS = {
-  "The Operator": "#2768A6",
-  "The Enforcer": "#C62828",
-  "The Protector": "#248F8D",
-  "The Politician": "#1B2A49",
-  "The Diplomat": "#6A2AA0",
-  "The Data Detective": "#1976D2",
+  "The Operator": "#2563EB",        // blue
+  "The Enforcer": "#DC2626",        // red
+  "The Protector": "#14B8A6",       // teal
+  "The Politician": "#1E293B",      // navy
+  "The Diplomat": "#8B5CF6",        // purple
+  "The Data Detective": "#38BDF8",  // electric blue
 };
 
-// Scenario data
+// Scenario data (same content as before)
 const scenarios = [
   {
     id: 1,
@@ -75,7 +75,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 2,
     title: "Retro Chain Reaction",
@@ -126,7 +125,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 3,
     title: "The Surprise Global Bonus",
@@ -177,7 +175,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 4,
     title: "Integration Chaos",
@@ -228,7 +225,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 5,
     title: "In-Country Provider Revolt",
@@ -279,7 +275,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 6,
     title: "The Public Complaint",
@@ -330,7 +325,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 7,
     title: "The GL Black Hole",
@@ -381,7 +375,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 8,
     title: "The Filing Deadline Duel",
@@ -432,7 +425,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 9,
     title: "The Leadership Review",
@@ -483,7 +475,6 @@ const scenarios = [
       },
     ],
   },
-
   {
     id: 10,
     title: "The End-of-Cycle Collapse",
@@ -555,14 +546,11 @@ const choicesContainerEl = document.getElementById("choices-container");
 const outcomeEl = document.getElementById("outcome");
 const nextButtonEl = document.getElementById("next-button");
 const resultTitleEl = document.getElementById("result-title");
-const resultDescriptionEl = document.getElementById("result-description");
-const statsListEl = document.getElementById("stats-list");
+const progressLabelEl = document.getElementById("progress-label");
+const progressFillEl = document.getElementById("progress-fill");
 const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
-const progressLabelEl = document.getElementById("progress-label");
-const progressFillEl = document.getElementById("progress-fill");
-
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -584,12 +572,9 @@ function renderScenario() {
     const currentNum = scenario.id;
     const total = scenarios.length;
     progressLabelEl.textContent = `Scenario ${currentNum} of ${total}`;
-  
-    // progress from 0% before scenario 1 up to ~90% on scenario 10
     const percent = ((currentNum - 1) / total) * 100;
     progressFillEl.style.width = `${percent}%`;
   }
-
 
   scenarioTitleEl.textContent = `Scenario ${scenario.id}: ${scenario.title}`;
   scenarioDescriptionEl.textContent = scenario.description;
@@ -705,27 +690,8 @@ function renderResult() {
     progressFillEl.style.width = "100%";
   }
 
-
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
-  resultDescriptionEl.textContent = latestArchetype.description;
-
-  statsListEl.innerHTML = "";
-
-  const statLabels = {
-    teamMorale: "Team Morale",
-    complianceRisk: "Compliance Risk (lower is better)",
-    leadershipTrust: "Leadership Trust",
-    accuracy: "Accuracy",
-    timeliness: "Timeliness",
-    relationships: "Cross-Functional Relationships",
-  };
-
-  Object.entries(currentStats).forEach(([key, value]) => {
-    const li = document.createElement("li");
-    li.textContent = `${statLabels[key]}: ${value}`;
-    statsListEl.appendChild(li);
-  });
 
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
@@ -734,7 +700,7 @@ function renderResult() {
   // Generate the image once fonts are ready
   if (document.fonts && document.fonts.load) {
     document.fonts
-      .load("700 54px 'Lilita One'")
+      .load("900 56px 'Inter'")
       .then(generateResultImage)
       .catch(generateResultImage);
   } else {
@@ -766,7 +732,9 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
   }
   if (line) {
     ctx.fillText(line, x, currY);
+    currY += lineHeight;
   }
+  return currY;
 }
 
 // =======================================
@@ -783,49 +751,61 @@ function generateResultImage() {
   canvas.height = height;
   const ctx = canvas.getContext("2d");
 
-  // Chunky outer border in archetype colour
   const borderColor =
     BORDER_COLORS[latestArchetype.title] || BORDER_COLORS["The Operator"];
 
+  // Outer coloured border
   ctx.fillStyle = borderColor;
   ctx.fillRect(0, 0, width, height);
 
-  // Inner dark border
-  ctx.fillStyle = "#2E2A33";
-  ctx.fillRect(40, 40, width - 80, height - 80);
-
-  // White content panel
+  // White frame
+  const frameMargin = 28;
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(60, 60, width - 120, height - 120);
+  ctx.fillRect(
+    frameMargin,
+    frameMargin,
+    width - frameMargin * 2,
+    height - frameMargin * 2
+  );
 
-  // Title – Lilita One with outline
+  // Inner dark card
+  const cardMargin = frameMargin + 8;
+  ctx.fillStyle = "#020617";
+  ctx.fillRect(
+    cardMargin,
+    cardMargin,
+    width - cardMargin * 2,
+    height - cardMargin * 2
+  );
+
+  // Title – Inter Black
   const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
   ctx.lineJoin = "round";
 
-  ctx.font = "bold 54px 'Lilita One', system-ui, sans-serif";
+  ctx.font = "900 56px 'Inter', system-ui, sans-serif";
 
-  // Centered horizontally within the white panel
+  const contentWidth = width - cardMargin * 2;
   const titleWidth = ctx.measureText(title).width;
-  const titleX = 60 + (width - 120 - titleWidth) / 2;
-  const titleY = 80;
+  const titleX = cardMargin + (contentWidth - titleWidth) / 2;
+  const titleY = cardMargin + 26;
 
-  // Outline
-  ctx.lineWidth = 8;
-  ctx.strokeStyle = "#111827";
+  // Soft outline for legibility
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = "#020617";
   ctx.strokeText(title, titleX, titleY);
 
-  // Fill
-  ctx.fillStyle = borderColor;
+  ctx.fillStyle = "#F9FAFB";
   ctx.fillText(title, titleX, titleY);
 
-  // Description – Inter
+  // Description – Inter Regular
   ctx.font = "20px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#111827";
-  const descX = 90;
-  const descY = 160;
-  const descWidth = width - 180;
-  drawWrappedText(
+  ctx.fillStyle = "#E5E7EB";
+  const descX = cardMargin + 40;
+  const descY = titleY + 80;
+  const descWidth = contentWidth - 80;
+
+  let nextY = drawWrappedText(
     ctx,
     latestArchetype.description,
     descX,
@@ -833,6 +813,8 @@ function generateResultImage() {
     descWidth,
     28
   );
+
+  nextY += 20;
 
   // Stats block
   const statLines = [
@@ -845,18 +827,18 @@ function generateResultImage() {
   ];
 
   ctx.font = "20px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#111827";
-  let statsY = 290;
+  ctx.fillStyle = "#E5E7EB";
+  let statsY = nextY;
   statLines.forEach((line) => {
-    ctx.fillText(line, 90, statsY);
+    ctx.fillText(line, descX, statsY);
     statsY += 28;
   });
 
   // Footer URL
   const gameUrl = window.location.href.split("#")[0];
-  ctx.font = "18px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#6B7280";
-  ctx.fillText(gameUrl, 90, height - 80);
+  ctx.font = "17px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText(gameUrl, descX, height - cardMargin - 40);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
