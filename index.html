@@ -94,8 +94,12 @@
       <!-- ========================= -->
       <!-- SCENARIO SECTION          -->
       <!-- ========================= -->
-      <section id="scenario-section" class="card hidden">
+      <section id="scenario-section" class="card hidden fade-container">
         <h2 id="scenario-title"></h2>
+
+        <!-- NEW: scenario tags/icons -->
+        <div id="scenario-tags" class="scenario-tags"></div>
+
         <p id="scenario-description" class="scenario-description"></p>
 
         <div id="choices-container" class="choices-container"></div>
@@ -116,6 +120,10 @@
         <h2>Your Result</h2>
         <h3 id="result-title" class="result-title"></h3>
 
+        <!-- NEW: textual description + personalised summary -->
+        <p id="result-description" class="result-description"></p>
+        <p id="result-summary" class="result-summary"></p>
+
         <img
           id="result-image"
           class="result-image hidden"
@@ -132,7 +140,6 @@
         </p>
 
         <div class="share-actions">
-          <!-- Icon-only style button (still has text for clarity) -->
           <button
             id="copy-result-button"
             class="btn tertiary-btn share-btn"
