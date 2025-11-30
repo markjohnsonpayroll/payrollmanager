@@ -700,24 +700,25 @@ function determineArchetype(stats) {
 // =======================================
 
 function updateAggregateStats() {
-  if (!latestArchetype) return;
+  // If Firestore not initialised, just skip logging
+  if (!window.db || !window.increment || !latestArchetype) return;
 
-  const statsDoc = db.collection("stats").doc("global");
+  const statsDoc = window.db.collection("stats").doc("global");
 
   const updates = {
-    totalGames: increment(1),
+    totalGames: window.increment(1),
   };
 
   // Archetype counter, e.g. archetype_TheOperator
   const archKey = `archetype_${latestArchetype.title.replace(/\s+/g, "")}`;
-  updates[archKey] = increment(1);
+  updates[archKey] = window.increment(1);
 
   // Scenario answer counters: scenario1_A, scenario2_B, etc.
   answerChoices.forEach((ans, idx) => {
     if (!ans) return;
     const scenarioNumber = idx + 1;
     const field = `scenario${scenarioNumber}_${ans}`;
-    updates[field] = increment(1);
+    updates[field] = window.increment(1);
   });
 
   statsDoc.set(updates, { merge: true }).catch((err) => {
@@ -1140,8 +1141,11 @@ if (startButton) {
 }
 
 // =====================
-// FIREBASE INIT
+// FIREBASE INIT (SAFE)
 // =====================
+
+window.db = null;
+window.increment = null;
 
 const firebaseConfig = {
   apiKey: "AIzaSyXWxr4arF2lVN9K2k_PRkP4Q9zEZylra0",
@@ -1153,6 +1157,14 @@ const firebaseConfig = {
   measurementId: "G-MX0N4WLCM5",
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const increment = firebase.firestore.FieldValue.increment;
+try {
+  if (window.firebase && window.firebase.firestore) {
+    window.firebase.initializeApp(firebaseConfig);
+    window.db = window.firebase.firestore();
+    window.increment = window.firebase.firestore.FieldValue.increment;
+  } else {
+    console.warn("Firebase not available – analytics disabled.");
+  }
+} catch (e) {
+  console.warn("Firebase init failed – analytics disabled.", e);
+}
