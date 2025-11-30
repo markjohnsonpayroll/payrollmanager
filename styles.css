@@ -542,3 +542,67 @@ body {
     font-size: 1.05rem;
   }
 }
+
+/* ============ Buttons ============ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: transparent;
+  color: #e5e7eb;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Main blue pills: choices, hero CTA, download */
+.primary-btn,
+.hero-cta,
+.choices-container .btn {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #f9fafb;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.45); /* subtle, not neon */
+}
+
+.primary-btn:hover,
+.hero-cta:hover,
+.choices-container .btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn.disabled,
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Dark minimal button (Copy) */
+.tertiary-btn,
+.copy-btn {
+  background: rgba(15, 23, 42, 0.96);
+  border-color: rgba(55, 65, 81, 0.9);
+  color: #e5e7eb;
+  box-shadow: none;
+}
+
+.tertiary-btn:hover,
+.copy-btn:hover {
+  background: rgba(15, 23, 42, 1);
+}
+
