@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>Payroll Manager Simulator</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Lilita+One&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,6 +23,7 @@
     </header>
 
     <main id="game" class="game">
+      <!-- SCENARIO VIEW -->
       <section id="scenario-section" class="card">
         <h2 id="scenario-title"></h2>
         <p id="scenario-description"></p>
@@ -22,11 +32,14 @@
 
         <div id="outcome" class="outcome hidden"></div>
 
-        <button id="next-button" class="btn primary hidden">
-          Next
-        </button>
+        <div class="next-row">
+          <button id="next-button" class="btn primary hidden">
+            Next
+          </button>
+        </div>
       </section>
 
+      <!-- RESULT VIEW -->
       <section id="result-section" class="card hidden">
         <h2>Your Result</h2>
         <h3 id="result-title"></h3>
@@ -35,14 +48,20 @@
         <h4>Final Stats</h4>
         <ul id="stats-list" class="stats-list"></ul>
 
+        <div class="result-image-wrapper">
+          <img
+            id="result-image"
+            class="result-image hidden"
+            alt="Your Payroll Manager result image"
+          />
+        </div>
+
         <div class="result-actions">
-          <button id="share-button" class="btn primary">
-            Share on LinkedIn
-          </button>
-          <button id="download-image-button" class="btn">
+          <button id="download-image-button" class="btn primary">
             Download result image
           </button>
         </div>
+
         <p id="share-status" class="share-hint"></p>
       </section>
     </main>
