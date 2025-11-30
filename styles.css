@@ -435,6 +435,51 @@ body {
   }
 }
 
+/* ========================= */
+/* SHARE CTA                 */
+/* ========================= */
+
+.share-prompt {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #d1d5db;
+}
+
+.share-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.share-btn {
+  flex: 1 1 160px;
+}
+
+.tertiary-btn {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+}
+
+.tertiary-btn:hover:not(.disabled) {
+  background: rgba(31, 41, 55, 0.9);
+  box-shadow: none;
+}
+
+/* Mobile tweaks for share area */
+@media (max-width: 600px) {
+  .share-actions {
+    flex-direction: column;
+  }
+
+  .share-btn {
+    width: 100%;
+  }
+}
+
+
 /* Very small devices: keep it comfy */
 @media (max-width: 420px) {
   .page-root {
