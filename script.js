@@ -845,7 +845,7 @@ function scoreToBandLabel(value) {
 // =======================================
 
 function renderResult() {
-  // only called once all 10 scenarios have been answered
+  // hide scenarios, show result card
   scenarioSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
 
@@ -857,15 +857,6 @@ function renderResult() {
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
 
-  if (resultDescriptionEl) {
-    resultDescriptionEl.textContent = latestArchetype.description;
-  }
-
-  if (resultSummaryEl) {
-    const summary = buildPersonalisedSummary(latestArchetype.dimensions);
-    resultSummaryEl.textContent = summary;
-  }
-
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
   }
@@ -873,14 +864,19 @@ function renderResult() {
   // log to Firestore (aggregated stats only)
   updateAggregateStats();
 
-  // Generate the image once fonts are ready
+  // 1) draw immediately so the image ALWAYS appears
+  generateResultImage();
+
+  // 2) if fonts are available, redraw once they are fully loaded
   if (document.fonts && document.fonts.load) {
     document.fonts
       .load("900 56px 'Inter'")
-      .then(generateResultImage)
-      .catch(generateResultImage);
-  } else {
-    generateResultImage();
+      .then(() => {
+        generateResultImage();
+      })
+      .catch(() => {
+        // if font load fails, we already have an image, so do nothing
+      });
   }
 }
 
