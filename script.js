@@ -23,13 +23,13 @@ const BORDER_COLORS = {
   "The Data Detective": "#38BDF8",  // electric blue
 };
 
-// Small tag text helpers (for consistency)
-const TAGS = {
-  TIMELINESS: "⏱️ Timeliness pressure",
-  ACCURACY: "🔍 Accuracy issue",
-  RELATIONSHIPS: "🤝 Relationship tension",
-  COMPLIANCE: "📉 Compliance risk",
-  CRISIS: "🔥 Crisis",
+// Scenario tag config
+const TAG_CONFIG = {
+  timeliness:   { emoji: "⏱️", label: "Timeliness",        cls: "scenario-tag-timeliness" },
+  accuracy:     { emoji: "🔍", label: "Accuracy issue",    cls: "scenario-tag-accuracy" },
+  compliance:   { emoji: "📉", label: "Compliance risk",   cls: "scenario-tag-compliance" },
+  relationship: { emoji: "🤝", label: "Relationships",     cls: "scenario-tag-relationship" },
+  crisis:       { emoji: "🔥", label: "Crisis",             cls: "scenario-tag-crisis" },
 };
 
 // Scenario data
@@ -39,7 +39,7 @@ const scenarios = [
     title: "The Cut-Off Collision",
     description:
       "It’s Monday morning. Three countries haven’t delivered time files, and cut-off is today. HR says: 'We’re working on it, just hold the run for now.' What do you do?",
-    tags: [TAGS.TIMELINESS, TAGS.RELATIONSHIPS, TAGS.CRISIS],
+    tags: ["timeliness", "relationship", "crisis"],
     choices: [
       {
         id: "A",
@@ -90,7 +90,7 @@ const scenarios = [
     title: "Retro Chain Reaction",
     description:
       "Variance reports show unexpected retros across six jurisdictions. Finance wants explanations 'by the hour'.",
-    tags: [TAGS.ACCURACY, TAGS.COMPLIANCE],
+    tags: ["accuracy", "compliance"],
     choices: [
       {
         id: "A",
@@ -141,7 +141,7 @@ const scenarios = [
     title: "The Surprise Global Bonus",
     description:
       "The CEO announces a surprise global bonus. HR wants it included this month; no upstream prep done.",
-    tags: [TAGS.CRISIS, TAGS.COMPLIANCE, TAGS.RELATIONSHIPS],
+    tags: ["accuracy", "compliance", "crisis"],
     choices: [
       {
         id: "A",
@@ -192,7 +192,7 @@ const scenarios = [
     title: "Integration Chaos",
     description:
       "Your HCM → Payroll integration exported blank fields. Half the import is missing key values.",
-    tags: [TAGS.ACCURACY, TAGS.COMPLIANCE, TAGS.CRISIS],
+    tags: ["accuracy", "compliance", "crisis"],
     choices: [
       {
         id: "A",
@@ -243,7 +243,7 @@ const scenarios = [
     title: "In-Country Provider Revolt",
     description:
       "Your LATAM in-country provider rejects the file and refuses to process it.",
-    tags: [TAGS.RELATIONSHIPS, TAGS.COMPLIANCE],
+    tags: ["relationship", "compliance"],
     choices: [
       {
         id: "A",
@@ -294,7 +294,7 @@ const scenarios = [
     title: "The Public Complaint",
     description:
       "An employee tags the company on social media: 'I haven’t been paid correctly for months and payroll is ignoring me.'",
-    tags: [TAGS.RELATIONSHIPS, TAGS.ACCURACY, TAGS.CRISIS],
+    tags: ["relationship", "crisis"],
     choices: [
       {
         id: "A",
@@ -345,7 +345,7 @@ const scenarios = [
     title: "The GL Black Hole",
     description:
       "Finance flags a major GL mismatch and says payroll keeps 'getting it wrong'. They want a multi-country audit.",
-    tags: [TAGS.ACCURACY, TAGS.RELATIONSHIPS, TAGS.COMPLIANCE],
+    tags: ["accuracy", "compliance", "relationship"],
     choices: [
       {
         id: "A",
@@ -396,7 +396,7 @@ const scenarios = [
     title: "The Filing Deadline Duel",
     description:
       "Two high-impact statutory filings are due today. You only have capacity to get one right on time without overtime.",
-    tags: [TAGS.TIMELINESS, TAGS.COMPLIANCE],
+    tags: ["timeliness", "compliance"],
     choices: [
       {
         id: "A",
@@ -447,7 +447,7 @@ const scenarios = [
     title: "The Leadership Review",
     description:
       "It’s time for your quarterly business review. You have strong wins but also visible misses this cycle.",
-    tags: [TAGS.RELATIONSHIPS, TAGS.CRISIS],
+    tags: ["leadership", "relationship"],
     choices: [
       {
         id: "A",
@@ -498,7 +498,7 @@ const scenarios = [
     title: "The End-of-Cycle Collapse",
     description:
       "Hours before global approval, you detect missing cost centres, FX variances, and retro loops in several countries.",
-    tags: [TAGS.CRISIS, TAGS.ACCURACY, TAGS.COMPLIANCE, TAGS.TIMELINESS],
+    tags: ["accuracy", "compliance", "timeliness", "crisis"],
     choices: [
       {
         id: "A",
@@ -567,20 +567,22 @@ const choicesContainerEl = document.getElementById("choices-container");
 const outcomeEl = document.getElementById("outcome");
 const nextButtonEl = document.getElementById("next-button");
 const resultTitleEl = document.getElementById("result-title");
-const resultDescriptionEl = document.getElementById("result-description");
-const resultSummaryEl = document.getElementById("result-summary");
 const progressLabelEl = document.getElementById("progress-label");
 const progressFillEl = document.getElementById("progress-fill");
 const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
+const personalisedSummaryEl = document.getElementById("personalised-summary");
+const archetypeDescriptionEl = document.querySelector(".result-archetype-description");
 
 // Intro / start
 const introSection = document.getElementById("intro-section");
 const startButton = document.getElementById("start-button");
 
-// Share copy button
-const copyResultButtonEl = document.getElementById("copy-result-button");
+// Share / copy (we support either id)
+const copyTextButtonEl =
+  document.getElementById("copy-text-button") ||
+  document.getElementById("copy-link-button");
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -588,6 +590,27 @@ function applyEffects(effects) {
       currentStats[key] += effects[key];
     }
   }
+}
+
+function renderScenarioTags(scenario) {
+  if (!scenarioTagsEl) return;
+  scenarioTagsEl.innerHTML = "";
+
+  if (!scenario.tags || !scenario.tags.length) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "scenario-tags";
+
+  scenario.tags.forEach((tagKey) => {
+    const cfg = TAG_CONFIG[tagKey];
+    if (!cfg) return;
+    const span = document.createElement("span");
+    span.className = `scenario-tag ${cfg.cls}`;
+    span.textContent = `${cfg.emoji} ${cfg.label}`;
+    wrapper.appendChild(span);
+  });
+
+  scenarioTagsEl.appendChild(wrapper);
 }
 
 function renderScenario() {
@@ -608,19 +631,7 @@ function renderScenario() {
 
   scenarioTitleEl.textContent = `Scenario ${scenario.id}: ${scenario.title}`;
   scenarioDescriptionEl.textContent = scenario.description;
-
-  // Scenario tags / icons
-  if (scenarioTagsEl) {
-    scenarioTagsEl.innerHTML = "";
-    if (scenario.tags && scenario.tags.length) {
-      scenario.tags.forEach((tagText) => {
-        const tag = document.createElement("span");
-        tag.className = "scenario-tag";
-        tag.textContent = tagText;
-        scenarioTagsEl.appendChild(tag);
-      });
-    }
-  }
+  renderScenarioTags(scenario);
 
   choicesContainerEl.innerHTML = "";
   outcomeEl.textContent = "";
@@ -655,31 +666,14 @@ function handleChoiceClick(choice) {
   nextButtonEl.classList.remove("hidden");
 }
 
-// small fade between scenarios
-const SCENARIO_FADE_MS = 200;
-
 function handleNextScenario() {
-  // add fade-out class
-  if (scenarioSection) {
-    scenarioSection.classList.add("fade-out");
+  currentScenarioIndex += 1;
+
+  if (currentScenarioIndex >= scenarios.length) {
+    renderResult();
+  } else {
+    renderScenario();
   }
-
-  setTimeout(() => {
-    currentScenarioIndex += 1;
-
-    if (currentScenarioIndex >= scenarios.length) {
-      if (scenarioSection) {
-        scenarioSection.classList.remove("fade-out");
-      }
-      renderResult();
-    } else {
-      renderScenario();
-      if (scenarioSection) {
-        // remove fade-out to reveal next scenario
-        scenarioSection.classList.remove("fade-out");
-      }
-    }
-  }, SCENARIO_FADE_MS);
 }
 
 if (nextButtonEl) {
@@ -708,28 +702,28 @@ function determineArchetype(stats) {
 
   let title = "Balanced Operator";
   let description =
-    "You balance accuracy, risk, relationships, and deadlines. No single dimension dominates your style, so you tend to flex based on what the situation needs.";
+    "You balance accuracy, risk, relationships, and deadlines. No single dimension dominates your style.";
 
   switch (dominant.key) {
     case "accuracy":
       title = "The Data Detective";
       description =
-        "Your first instinct is to stabilise the numbers. You bring order to noisy data and look for patterns, making it harder for issues to hide in the details.";
+        "You care deeply about correctness and root-cause analysis. You’re the one who actually knows why the numbers are what they are.";
       break;
     case "safeCompliance":
       title = "The Enforcer";
       description =
-        "You anchor decisions around legal, tax, and statutory risk. You’re comfortable pushing back when something threatens compliance or control.";
+        "Compliance is non-negotiable. You protect the company from regulatory risk, even if it means saying no to pressure.";
       break;
     case "teamMorale":
       title = "The Protector";
       description =
-        "You’re highly tuned into workload, burnout, and resilience. You’d rather build a sustainable payroll engine than chase short-term heroics.";
+        "You shield your team from chaos and burnout. You know that sustainable delivery depends on people, not heroics.";
       break;
     case "leadershipTrust":
       title = "The Politician";
       description =
-        "You instinctively think in narratives, stakeholders, and optics. You focus on maintaining confidence at senior levels so payroll keeps its seat at the table.";
+        "You manage upwards effectively, building trust and influence at senior levels to get payroll what it needs.";
       break;
     case "timeliness":
       title = "The Operator";
@@ -739,62 +733,71 @@ function determineArchetype(stats) {
     case "relationships":
       title = "The Diplomat";
       description =
-        "You treat payroll as a team sport. You invest heavily in your relationships with HR, Finance, and providers so collaboration stays high even when pressure spikes.";
+        "You invest heavily in cross-functional relationships. HR, Finance, and providers see you as a partner, not a blocker.";
       break;
   }
 
   return { title, description, dominantDimension: dominant };
 }
 
-// personalised micro-summary based on top two stats
-const DIMENSION_META = {
-  accuracy: {
-    label: "Accuracy",
-    tone: "dig into root causes and correctness",
-  },
-  safeCompliance: {
-    label: "Compliance Focus",
-    tone: "protect the organisation from regulatory and statutory risk",
-  },
-  teamMorale: {
-    label: "Team Morale",
-    tone: "keep an eye on team wellbeing and sustainability",
-  },
-  leadershipTrust: {
-    label: "Leadership Trust",
-    tone: "align with senior stakeholders and manage expectations",
-  },
-  timeliness: {
-    label: "Timeliness",
-    tone: "prioritise cycle-critical actions and on-time delivery",
-  },
-  relationships: {
-    label: "Cross-Functional Relationships",
-    tone: "build bridges across HR, Finance, and in-country providers",
-  },
-};
+// score bands (used in table and text)
+function scoreToBandLabel(value) {
+  const v = Math.max(-10, Math.min(10, value));
+  if (v <= -4) return "Needs focus";
+  if (v <= -1) return "Emerging";
+  if (v <= 2)  return "Balanced";
+  if (v <= 5)  return "Strong";
+  return "Signature strength";
+}
 
-function buildPersonalisedSummary(dimensions) {
-  // dimensions = same structure as in determineArchetype
-  const sorted = [...dimensions].sort((a, b) => b.value - a.value);
-  const top1 = sorted[0];
-  const top2 = sorted[1];
+// personalised summary based on top 2 stats
+function buildPersonalisedSummary(stats) {
+  const safeCompliance = -stats.complianceRisk;
 
-  // if everything is basically flat, show balanced message
-  if (!top1 || (top1.value === 0 && (!top2 || top2.value === 0))) {
-    return "You show a fairly balanced approach across timeliness, compliance, relationships, delivery and leadership – no single tendency dominates.";
+  const dims = [
+    { key: "accuracy",        label: "Accuracy",        value: stats.accuracy },
+    { key: "timeliness",      label: "Timeliness",      value: stats.timeliness },
+    { key: "teamMorale",      label: "Team Morale",     value: stats.teamMorale },
+    { key: "relationships",   label: "Relationships",   value: stats.relationships },
+    { key: "leadershipTrust", label: "Leadership Trust", value: stats.leadershipTrust },
+    { key: "complianceFocus", label: "Compliance Focus", value: safeCompliance },
+  ];
+
+  dims.sort((a, b) => b.value - a.value);
+
+  const primary = dims[0];
+  const secondary = dims[1];
+
+  const phrases = {
+    accuracy:
+      "You lean heavily into getting the numbers right and understanding the ‘why’ behind every variance.",
+    timeliness:
+      "You anchor around hitting cut-offs and keeping the payroll cycle moving on time.",
+    teamMorale:
+      "You pay close attention to how the team is coping and try to protect people from burnout.",
+    relationships:
+      "You invest in relationships with HR, Finance, and providers to keep the ecosystem working smoothly.",
+    leadershipTrust:
+      "You focus on keeping senior stakeholders aligned and confident in payroll.",
+    complianceFocus:
+      "You keep your eye on regulatory and statutory risk, preferring to be safe rather than sorry.",
+  };
+
+  function phraseFor(dim) {
+    if (!dim) return "";
+    if (dim.key === "complianceFocus") return phrases.complianceFocus;
+    return phrases[dim.key] || "";
   }
 
-  const meta1 = DIMENSION_META[top1.key];
-  const meta2 = top2 ? DIMENSION_META[top2.key] : null;
+  const primaryText = phraseFor(primary);
+  const secondaryText = phraseFor(secondary);
+  if (!primaryText) return "";
 
-  if (meta1 && meta2) {
-    return `You lead with ${meta1.label} and ${meta2.label}, tending to ${meta1.tone} while also ${meta2.tone}.`;
+  if (!secondaryText) {
+    return `You lead with ${primary.label.toLowerCase()}. ${primaryText}`;
   }
-  if (meta1) {
-    return `You lead with ${meta1.label}, tending to ${meta1.tone}.`;
-  }
-  return "";
+
+  return `You lead with ${primary.label.toLowerCase()} and ${secondary.label.toLowerCase()}, combining these in most of your decisions. ${primaryText} ${secondaryText}`;
 }
 
 // =======================================
@@ -802,25 +805,22 @@ function buildPersonalisedSummary(dimensions) {
 // =======================================
 
 function updateAggregateStats() {
-  // If Firestore not initialised, just skip logging
-  if (!window.db || !window.increment || !latestArchetype) return;
+  if (!latestArchetype) return;
 
-  const statsDoc = window.db.collection("stats").doc("global");
+  const statsDoc = db.collection("stats").doc("global");
 
   const updates = {
-    totalGames: window.increment(1),
+    totalGames: increment(1),
   };
 
-  // Archetype counter, e.g. archetype_TheOperator
   const archKey = `archetype_${latestArchetype.title.replace(/\s+/g, "")}`;
-  updates[archKey] = window.increment(1);
+  updates[archKey] = increment(1);
 
-  // Scenario answer counters: scenario1_A, scenario2_B, etc.
   answerChoices.forEach((ans, idx) => {
     if (!ans) return;
     const scenarioNumber = idx + 1;
     const field = `scenario${scenarioNumber}_${ans}`;
-    updates[field] = window.increment(1);
+    updates[field] = increment(1);
   });
 
   statsDoc.set(updates, { merge: true }).catch((err) => {
@@ -829,23 +829,10 @@ function updateAggregateStats() {
 }
 
 // =======================================
-// SCORE BANDS (used in image)
-// =======================================
-
-function scoreToBandLabel(value) {
-  if (value <= -6) return "Needs focus";
-  if (value <= -2) return "Emerging";
-  if (value <= 1) return "Balanced";
-  if (value <= 5) return "Strong";
-  return "Signature strength";
-}
-
-// =======================================
 // RESULT RENDER / IMAGE
 // =======================================
 
 function renderResult() {
-  // hide scenarios, show result card
   scenarioSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
 
@@ -857,26 +844,28 @@ function renderResult() {
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
 
+  if (archetypeDescriptionEl) {
+    archetypeDescriptionEl.textContent = latestArchetype.description;
+  }
+
+  const personalised = buildPersonalisedSummary(currentStats);
+  if (personalisedSummaryEl) {
+    personalisedSummaryEl.textContent = personalised;
+  }
+
   if (shareStatusEl) {
     shareStatusEl.textContent = "";
   }
 
-  // log to Firestore (aggregated stats only)
   updateAggregateStats();
 
-  // 1) draw immediately so the image ALWAYS appears
-  generateResultImage();
-
-  // 2) if fonts are available, redraw once they are fully loaded
   if (document.fonts && document.fonts.load) {
     document.fonts
       .load("900 56px 'Inter'")
-      .then(() => {
-        generateResultImage();
-      })
-      .catch(() => {
-        // if font load fails, we already have an image, so do nothing
-      });
+      .then(generateResultImage)
+      .catch(generateResultImage);
+  } else {
+    generateResultImage();
   }
 }
 
@@ -918,7 +907,6 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
   const axes = values.length;
   const angleStep = (Math.PI * 2) / axes;
 
-  // Background rings
   ctx.save();
   ctx.strokeStyle = "#1F2937";
   ctx.lineWidth = 1;
@@ -937,10 +925,8 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
     ctx.stroke();
   }
 
-  // Axes lines + labels
   ctx.strokeStyle = "#374151";
   ctx.lineWidth = 1;
-
   ctx.font = "14px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
 
@@ -963,11 +949,10 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
     ctx.fillText(label, lx - textWidth / 2, ly - 7);
   }
 
-  // Data polygon
   ctx.beginPath();
   for (let i = 0; i < axes; i++) {
     const angle = i * angleStep - Math.PI / 2;
-    const v = values[i]; // 0..1
+    const v = values[i];
     const r = radius * v;
     const x = centerX + Math.cos(angle) * r;
     const y = centerY + Math.sin(angle) * r;
@@ -976,7 +961,7 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
   }
   ctx.closePath();
 
-  ctx.fillStyle = `${color}33`; // translucent fill
+  ctx.fillStyle = `${color}33`;
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.fill();
@@ -986,7 +971,7 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
 }
 
 // =======================================
-// RESULT IMAGE GENERATION (BRANDED)
+// RESULT IMAGE GENERATION (WITH SUMMARY)
 // =======================================
 
 function generateResultImage() {
@@ -1002,11 +987,9 @@ function generateResultImage() {
   const borderColor =
     BORDER_COLORS[latestArchetype.title] || BORDER_COLORS["The Operator"];
 
-  // Outer coloured border
   ctx.fillStyle = borderColor;
   ctx.fillRect(0, 0, width, height);
 
-  // White frame
   const frameMargin = 28;
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(
@@ -1016,7 +999,6 @@ function generateResultImage() {
     height - frameMargin * 2
   );
 
-  // Inner dark card
   const cardMargin = frameMargin + 8;
   ctx.fillStyle = "#020617";
   ctx.fillRect(
@@ -1028,30 +1010,29 @@ function generateResultImage() {
 
   const innerLeft = cardMargin + 40;
   const innerRight = width - cardMargin - 40;
-  const innerTop = cardMargin + 20;
+  const innerTop = cardMargin + 24;
   const innerBottom = height - cardMargin - 40;
   const contentWidth = innerRight - innerLeft;
 
-  // ===== TITLE =====
+  // Title
   const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
   ctx.lineJoin = "round";
-
   ctx.font = "900 56px 'Inter', system-ui, sans-serif";
   const titleWidth = ctx.measureText(title).width;
   const titleX = innerLeft + (contentWidth - titleWidth) / 2;
-  const titleY = innerTop + 10;
+  const titleY = innerTop;
 
   ctx.lineWidth = 6;
   ctx.strokeStyle = "#020617";
   ctx.strokeText(title, titleX, titleY);
-
   ctx.fillStyle = "#F9FAFB";
   ctx.fillText(title, titleX, titleY);
 
-  // ===== DESCRIPTION =====
+  // Archetype description + personalised summary
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
+
   const descX = innerLeft;
   const descY = titleY + 70;
   const descWidth = contentWidth;
@@ -1065,26 +1046,33 @@ function generateResultImage() {
     28
   );
 
+  const summaryText = buildPersonalisedSummary(currentStats);
+  if (summaryText) {
+    nextY += 6;
+    ctx.fillStyle = "#9CA3AF";
+    ctx.font = "18px 'Inter', system-ui, sans-serif";
+    nextY = drawWrappedText(
+      ctx,
+      summaryText,
+      descX,
+      nextY,
+      descWidth,
+      24
+    );
+  }
+
   nextY += 10;
 
-  // ===== RADAR + TABLE BLOCK =====
+  // Radar + table block
   const blockTop = nextY + 10;
-  const blockBottom = innerBottom - 50; // leave room for footer
+  const blockBottom = innerBottom - 60;
   const blockHeight = blockBottom - blockTop;
 
-  // Slightly more central layout
   const radarRadius = 115;
   const radarCenterY = blockTop + blockHeight / 2;
-  const radarCenterX = innerLeft + contentWidth * 0.30;
+  const radarCenterX = innerLeft + radarRadius + 20;
 
-  const tableLeft = innerLeft + contentWidth * 0.50;
-  const tableRight = innerRight - 10;
-  const tableWidth = tableRight - tableLeft;
-  const tableColSplit = tableLeft + tableWidth * 0.52;
-
-  // Prepare values for radar (normalised)
   const safeCompliance = -currentStats.complianceRisk;
-
   const rawValues = [
     currentStats.accuracy,
     currentStats.timeliness,
@@ -1093,7 +1081,6 @@ function generateResultImage() {
     currentStats.leadershipTrust,
     safeCompliance,
   ];
-
   const labels = ["ACC", "TIME", "MORALE", "REL", "LEAD", "COMP"];
   const values = rawValues.map((v) => normalise(v, -10, 10));
 
@@ -1107,8 +1094,13 @@ function generateResultImage() {
     borderColor
   );
 
-  // ===== TABLE: KEY TENDENCIES =====
-  const statDescriptors = [
+  // Key tendencies table
+  const tableLeft = radarCenterX + radarRadius + 70;
+  const tableTop = blockTop + 12;
+  const tableWidth = innerRight - tableLeft;
+  const rowHeight = 26;
+  const headerHeight = 30;
+  const rows = [
     { label: "Accuracy", score: currentStats.accuracy },
     { label: "Timeliness", score: currentStats.timeliness },
     { label: "Team Morale", score: currentStats.teamMorale },
@@ -1117,88 +1109,83 @@ function generateResultImage() {
     { label: "Compliance Focus", score: safeCompliance },
   ];
 
-  // Title
-  let headerY = blockTop + 4;
   ctx.font = "22px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#F9FAFB";
-  ctx.fillText("Key tendencies", tableLeft, headerY);
+  ctx.fillText("Key tendencies", tableLeft, tableTop - 8);
 
-  // Column headers
-  const tableTop = headerY + 28;
-  ctx.font = "13px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#9CA3AF";
-  ctx.fillText("Dimension", tableLeft, tableTop);
-  ctx.fillText("Tendency", tableColSplit + 12, tableTop);
+  // Table outline
+  const tableBodyTop = tableTop + 10;
+  const tableBodyBottom = tableBodyTop + headerHeight + rows.length * rowHeight;
+  const tableRight = tableLeft + tableWidth;
 
-  // Header underline
-  const headerLineY = tableTop + 8;
-  ctx.strokeStyle = "rgba(148,163,184,0.35)";
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.25)";
   ctx.lineWidth = 1;
+
   ctx.beginPath();
-  ctx.moveTo(tableLeft, headerLineY);
-  ctx.lineTo(tableRight, headerLineY);
+  ctx.moveTo(tableLeft, tableBodyTop);
+  ctx.lineTo(tableRight, tableBodyTop);
   ctx.stroke();
 
-  // Column divider
-  const tableBottomY =
-    headerLineY + 8 + statDescriptors.length * 26 + 4;
-  ctx.strokeStyle = "rgba(148,163,184,0.20)";
   ctx.beginPath();
-  ctx.moveTo(tableColSplit, tableTop - 10);
-  ctx.lineTo(tableColSplit, tableBottomY);
+  ctx.moveTo(tableLeft, tableBodyBottom);
+  ctx.lineTo(tableRight, tableBodyBottom);
+  ctx.stroke();
+
+  const colSplit = tableLeft + tableWidth * 0.45;
+
+  ctx.beginPath();
+  ctx.moveTo(colSplit, tableBodyTop);
+  ctx.lineTo(colSplit, tableBodyBottom);
+  ctx.stroke();
+
+  // Header
+  ctx.font = "14px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText("Dimension", tableLeft + 4, tableBodyTop + 20);
+  ctx.fillText("Profile", colSplit + 4, tableBodyTop + 20);
+
+  ctx.beginPath();
+  ctx.moveTo(tableLeft, tableBodyTop + headerHeight);
+  ctx.lineTo(tableRight, tableBodyTop + headerHeight);
   ctx.stroke();
 
   // Rows
-  let rowY = headerLineY + 14;
-  const rowHeight = 26;
+  ctx.font = "16px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
 
-  ctx.font = "15px 'Inter', system-ui, sans-serif";
+  rows.forEach((row, index) => {
+    const y = tableBodyTop + headerHeight + (index + 1) * rowHeight;
+    const textY = y - 6;
 
-  statDescriptors.forEach((s, idx) => {
-    const band = scoreToBandLabel(s.score);
+    ctx.fillText(row.label, tableLeft + 4, textY);
+    ctx.fillText(scoreToBandLabel(row.score), colSplit + 4, textY);
 
-    // dimension
-    ctx.fillStyle = "#E5E7EB";
-    ctx.fillText(s.label, tableLeft, rowY);
-
-    // tendency
-    ctx.fillStyle = "#F9FAFB";
-    ctx.fillText(band, tableColSplit + 12, rowY);
-
-    // faint row line (except after last row)
-    if (idx < statDescriptors.length - 1) {
-      const lineY = rowY + 8;
-      ctx.strokeStyle = "rgba(148,163,184,0.16)";
-      ctx.beginPath();
-      ctx.moveTo(tableLeft, lineY);
-      ctx.lineTo(tableRight, lineY);
-      ctx.stroke();
-    }
-
-    rowY += rowHeight;
+    ctx.strokeStyle = "rgba(31, 41, 55, 0.7)";
+    ctx.beginPath();
+    ctx.moveTo(tableLeft, y);
+    ctx.lineTo(tableRight, y);
+    ctx.stroke();
   });
 
-  // ===== BRANDED FOOTER (with a bit more padding) =====
+  // BRANDED FOOTER
   const gameUrl = window.location.href.split("#")[0];
-  const footerLineY = innerBottom - 32;
+  const footerY = innerBottom - 18;
 
-  // subtle divider line
   ctx.strokeStyle = "#111827";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(innerLeft, footerLineY);
-  ctx.lineTo(innerRight, footerLineY);
+  ctx.moveTo(innerLeft, footerY);
+  ctx.lineTo(innerRight, footerY);
   ctx.stroke();
 
-  // branding text
   ctx.font = "16px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
-  ctx.fillText("Payroll Manager Simulator", innerLeft, footerLineY + 22);
+  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 24);
 
   ctx.font = "14px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#9CA3AF";
   const cleanUrl = gameUrl.replace(/^https?:\/\//, "");
-  ctx.fillText(cleanUrl, innerLeft, footerLineY + 40);
+  ctx.fillText(cleanUrl, innerLeft, footerY + 44);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
@@ -1209,7 +1196,7 @@ function generateResultImage() {
 }
 
 // =======================================
-// DOWNLOAD & SHARE HANDLERS
+// DOWNLOAD & COPY TEXT HANDLERS
 // =======================================
 
 function handleDownloadImageClick() {
@@ -1229,7 +1216,7 @@ function handleDownloadImageClick() {
 
   if (shareStatusEl) {
     shareStatusEl.textContent =
-      "Result image downloaded. Attach it to your LinkedIn post along with the copied text.";
+      "Result image downloaded. Add it to your LinkedIn post along with the copied text.";
   }
 }
 
@@ -1241,46 +1228,31 @@ function getCanonicalGameUrl() {
   return window.location.href.split("#")[0];
 }
 
-// Build the share text that goes on the clipboard
-function buildShareText() {
+// Copy ready-to-paste LinkedIn text
+async function handleCopyResultTextClick() {
+  if (!latestArchetype) return;
+
   const url = getCanonicalGameUrl();
-  const title = latestArchetype ? latestArchetype.title : "a payroll archetype";
-
-  return (
-    `I just played the Payroll Manager Simulator and got "${title}". ` +
-    `It walks you through 10 global payroll scenarios and shows how you balance timeliness, compliance, relationships and delivery.\n\n` +
-    `Try it here: ${url}\n` +
-    `#PayrollManagerSimulator`
-  );
-}
-
-async function handleCopyResultClick() {
-  if (!latestArchetype) {
-    if (shareStatusEl) {
-      shareStatusEl.textContent =
-        "Finish the simulation first to copy your result.";
-    }
-    return;
-  }
-
-  const text = buildShareText();
+  const text =
+    `I just played the Payroll Manager Simulator and my result was **${latestArchetype.title}**.\n\n` +
+    `It’s a 10-scenario decision game for payroll managers – no signup, just choices.\n\n` +
+    `${url}\n#PayrollManagerSimulator`;
 
   try {
     await navigator.clipboard.writeText(text);
     if (shareStatusEl) {
-      shareStatusEl.textContent = "Result text copied. Paste it into your LinkedIn post.";
+      shareStatusEl.textContent = "Share text copied. Paste it into your LinkedIn post.";
     }
   } catch (err) {
-    console.error("Clipboard copy failed:", err);
     if (shareStatusEl) {
       shareStatusEl.textContent =
-        "Couldn’t copy automatically – please paste manually.";
+        "Couldn’t copy automatically – select and copy manually instead.";
     }
   }
 }
 
-if (copyResultButtonEl) {
-  copyResultButtonEl.addEventListener("click", handleCopyResultClick);
+if (copyTextButtonEl) {
+  copyTextButtonEl.addEventListener("click", handleCopyResultTextClick);
 }
 
 // =======================================
@@ -1293,7 +1265,6 @@ if (startButton) {
       introSection.classList.add("hidden");
     }
     scenarioSection.classList.remove("hidden");
-    // reset state in case of future replay features
     currentStats = { ...INITIAL_STATS };
     currentScenarioIndex = 0;
     answerChoices = [];
@@ -1302,11 +1273,8 @@ if (startButton) {
 }
 
 // =====================
-// FIREBASE INIT (SAFE)
+// FIREBASE INIT
 // =====================
-
-window.db = null;
-window.increment = null;
 
 const firebaseConfig = {
   apiKey: "AIzaSyXWxr4arF2lVN9K2k_PRkP4Q9zEZylra0",
@@ -1318,14 +1286,6 @@ const firebaseConfig = {
   measurementId: "G-MX0N4WLCM5",
 };
 
-try {
-  if (window.firebase && window.firebase.firestore) {
-    window.firebase.initializeApp(firebaseConfig);
-    window.db = window.firebase.firestore();
-    window.increment = window.firebase.firestore.FieldValue.increment;
-  } else {
-    console.warn("Firebase not available – analytics disabled.");
-  }
-} catch (e) {
-  console.warn("Firebase init failed – analytics disabled.", e);
-}
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const increment = firebase.firestore.FieldValue.increment;
