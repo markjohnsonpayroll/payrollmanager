@@ -309,11 +309,21 @@ body {
   margin-top: 10px;
 }
 
+/* make scenario buttons blue pills again */
 .choices-container .btn {
   width: 100%;
   justify-content: flex-start;
   padding-left: 20px;
   padding-right: 20px;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #f9fafb;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
+}
+
+.choices-container .btn:hover {
+  background: linear-gradient(90deg, #1d4ed8, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
 }
 
 .outcome {
