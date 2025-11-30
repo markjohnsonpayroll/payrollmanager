@@ -426,35 +426,18 @@ body {
 }
 
 .share-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
   margin-top: 8px;
+  display: flex;
+  justify-content: flex-start;
 }
 
-#download-image-button {
-  align-self: flex-start;
+/* Text box */
+.share-text-block {
+  margin-top: 10px;
 }
 
-/* Copy button styling (dark pill) */
-#copy-share-button {
-  background: rgba(15, 23, 42, 0.98);
-  color: #f1f5f9;
-  border-radius: 999px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.75);
-  padding: 12px 20px;
-  font-weight: 500;
-}
-
-#copy-share-button:hover {
-  background: rgba(15, 23, 42, 1);
-}
-
-/* Share text preview box */
 .share-text-preview {
-  margin: 2px 0 8px;
+  margin: 0;
   padding: 10px 12px 12px;
   background: rgba(15, 23, 42, 0.98);
   border-radius: 12px;
@@ -467,6 +450,26 @@ body {
   word-break: break-word;
   max-height: 180px;
   overflow-y: auto;
+}
+
+#download-image-button {
+  align-self: flex-start;
+}
+
+/* Copy button under the text, dark pill */
+.copy-btn {
+  margin-top: 8px;
+  background: rgba(15, 23, 42, 0.98);
+  color: #f1f5f9;
+  border-radius: 999px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  box-shadow: none; /* no glow */
+  padding: 10px 18px;
+  font-weight: 500;
+}
+
+.copy-btn:hover {
+  background: rgba(15, 23, 42, 1);
 }
 
 .share-status {
@@ -508,12 +511,14 @@ body {
     font-size: 0.9rem;
   }
 
-  /* Make primary CTAs and copy full-width on mobile */
+/* Full-width CTAs on mobile */
+@media (max-width: 768px) {
   #download-image-button,
-  #copy-share-button,
+  .copy-btn,
   .hero-cta {
     width: 100%;
   }
+}
 
   .result-image {
     margin-bottom: 14px;
