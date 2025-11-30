@@ -1066,18 +1066,20 @@ function generateResultImage() {
     );
   }
 
-  // space before radar + tendencies block
+  // Gap before radar / tendencies block
   nextY += 30;
 
-  // ===== RADAR + KEY TENDENCIES (TEXT, NOT TABLE) =====
+  // ===== RADAR + KEY TENDENCIES (TEXT, NO TABLE) =====
   const blockTop = nextY;
   const blockBottom = innerBottom - 60; // leave room for footer
   const blockHeight = blockBottom - blockTop;
 
-  // Radar on the left
+  const layoutCenterX = innerLeft + contentWidth / 2;
+
+  // Radar positioned to the left of centre
   const radarRadius = 125;
   const radarCenterY = blockTop + blockHeight / 2;
-  const radarCenterX = innerLeft + radarRadius + 10;
+  const radarCenterX = layoutCenterX - 220;
 
   const safeCompliance = -currentStats.complianceRisk;
   const rawValues = [
@@ -1101,19 +1103,14 @@ function generateResultImage() {
     borderColor
   );
 
-  // Key tendencies text block on the right
-  const statsX = radarCenterX + radarRadius + 80;
+  // Key tendencies text block to the right, more central
+  const statsX = layoutCenterX + 20;
   let statsY = blockTop + 10;
 
   ctx.font = "22px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#F9FAFB";
   ctx.fillText("Key tendencies", statsX, statsY);
-  statsY += 30;
-
-  ctx.font = "18px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#9CA3AF";
-  ctx.fillText("Dimension  •  Profile", statsX, statsY);
-  statsY += 24;
+  statsY += 34;
 
   ctx.font = "18px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
@@ -1128,14 +1125,13 @@ function generateResultImage() {
   ];
 
   statDescriptors.forEach((s) => {
-    const band = scoreToBandLabel(s.score); // e.g. "Strong", "Needs focus"
+    const band = scoreToBandLabel(s.score);
     const line = `${s.label}: ${band}`;
     ctx.fillText(line, statsX, statsY);
     statsY += 24;
   });
 
-  // ===== BRANDED FOOTER =====
-  const gameUrl = window.location.href.split("#")[0];
+  // ===== CENTRED BRANDED FOOTER (ONE LINE) =====
   const footerY = innerBottom - 18;
 
   ctx.strokeStyle = "#111827";
@@ -1145,14 +1141,13 @@ function generateResultImage() {
   ctx.lineTo(innerRight, footerY);
   ctx.stroke();
 
+  const footerText = "Payroll Manager Simulator • payrollmanagersim.com";
   ctx.font = "16px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
-  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 24);
 
-  ctx.font = "14px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#9CA3AF";
-  const cleanUrl = gameUrl.replace(/^https?:\/\//, "");
-  ctx.fillText(cleanUrl, innerLeft, footerY + 44);
+  const footerWidth = ctx.measureText(footerText).width;
+  const footerX = innerLeft + (contentWidth - footerWidth) / 2;
+  ctx.fillText(footerText, footerX, footerY + 26);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
