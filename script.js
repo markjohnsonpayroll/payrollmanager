@@ -23,7 +23,7 @@ const BORDER_COLORS = {
   "The Data Detective": "#38BDF8",  // electric blue
 };
 
-// Scenario data (same content as before)
+// Scenario data
 const scenarios = [
   {
     id: 1,
@@ -709,7 +709,7 @@ function renderResult() {
 }
 
 // =======================================
-// CANVAS TEXT HELPERS
+// CANVAS TEXT / RADAR HELPERS
 // =======================================
 
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -735,6 +735,82 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
     currY += lineHeight;
   }
   return currY;
+}
+
+function normalise(value, min, max) {
+  const clamped = Math.max(min, Math.min(max, value));
+  return (clamped - min) / (max - min);
+}
+
+function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
+  const axes = values.length;
+  const angleStep = (Math.PI * 2) / axes;
+
+  // Background rings
+  ctx.save();
+  ctx.strokeStyle = "#1F2937";
+  ctx.lineWidth = 1;
+
+  for (let i = 1; i <= 3; i++) {
+    ctx.beginPath();
+    const r = (radius / 3) * i;
+    for (let a = 0; a <= axes; a++) {
+      const angle = a * angleStep - Math.PI / 2;
+      const x = centerX + Math.cos(angle) * r;
+      const y = centerY + Math.sin(angle) * r;
+      if (a === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  // Axes lines + labels
+  ctx.strokeStyle = "#374151";
+  ctx.lineWidth = 1;
+
+  ctx.font = "14px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+
+  for (let i = 0; i < axes; i++) {
+    const angle = i * angleStep - Math.PI / 2;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    const labelRadius = radius + 14;
+    const lx = centerX + Math.cos(angle) * labelRadius;
+    const ly = centerY + Math.sin(angle) * labelRadius;
+
+    const label = labels[i];
+    const textWidth = ctx.measureText(label).width;
+    ctx.fillText(label, lx - textWidth / 2, ly - 7);
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  for (let i = 0; i < axes; i++) {
+    const angle = i * angleStep - Math.PI / 2;
+    const v = values[i]; // 0..1
+    const r = radius * v;
+    const x = centerX + Math.cos(angle) * r;
+    const y = centerY + Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+
+  ctx.fillStyle = `${color}33`; // translucent fill
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.restore();
 }
 
 // =======================================
@@ -778,6 +854,12 @@ function generateResultImage() {
     height - cardMargin * 2
   );
 
+  const innerLeft = cardMargin + 40;
+  const innerRight = width - cardMargin - 40;
+  const innerTop = cardMargin + 20;
+  const innerBottom = height - cardMargin - 40;
+  const contentWidth = innerRight - innerLeft;
+
   // Title – Inter Black
   const title = latestArchetype.title.toUpperCase();
   ctx.textBaseline = "top";
@@ -785,12 +867,10 @@ function generateResultImage() {
 
   ctx.font = "900 56px 'Inter', system-ui, sans-serif";
 
-  const contentWidth = width - cardMargin * 2;
   const titleWidth = ctx.measureText(title).width;
-  const titleX = cardMargin + (contentWidth - titleWidth) / 2;
-  const titleY = cardMargin + 26;
+  const titleX = innerLeft + (contentWidth - titleWidth) / 2;
+  const titleY = innerTop + 16;
 
-  // Soft outline for legibility
   ctx.lineWidth = 6;
   ctx.strokeStyle = "#020617";
   ctx.strokeText(title, titleX, titleY);
@@ -801,9 +881,9 @@ function generateResultImage() {
   // Description – Inter Regular
   ctx.font = "20px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#E5E7EB";
-  const descX = cardMargin + 40;
+  const descX = innerLeft;
   const descY = titleY + 80;
-  const descWidth = contentWidth - 80;
+  const descWidth = contentWidth;
 
   let nextY = drawWrappedText(
     ctx,
@@ -814,9 +894,46 @@ function generateResultImage() {
     28
   );
 
-  nextY += 20;
+  nextY += 16;
 
-  // Stats block
+  // Radar + stats area
+  const radarRadius = 110;
+  const radarCenterX = innerLeft + radarRadius + 10;
+  const radarCenterY = innerBottom - radarRadius - 10;
+
+  // Prepare values for radar (normalised)
+  const safeCompliance = -currentStats.complianceRisk;
+
+  const rawValues = [
+    currentStats.accuracy,
+    currentStats.timeliness,
+    currentStats.teamMorale,
+    currentStats.relationships,
+    currentStats.leadershipTrust,
+    safeCompliance,
+  ];
+
+  const labels = ["ACC", "TIME", "MORALE", "REL", "LEAD", "COMP"];
+
+  const values = rawValues.map((v) => normalise(v, -10, 10));
+
+  drawRadarChart(
+    ctx,
+    radarCenterX,
+    radarCenterY,
+    radarRadius,
+    values,
+    labels,
+    borderColor
+  );
+
+  // Stats text on the right
+  const statsX = radarCenterX + radarRadius + 60;
+  let statsY = radarCenterY - radarRadius + 10;
+
+  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+
   const statLines = [
     `Team Morale: ${currentStats.teamMorale}`,
     `Compliance Risk (lower is better): ${currentStats.complianceRisk}`,
@@ -826,11 +943,8 @@ function generateResultImage() {
     `Cross-Functional Relationships: ${currentStats.relationships}`,
   ];
 
-  ctx.font = "20px 'Inter', system-ui, sans-serif";
-  ctx.fillStyle = "#E5E7EB";
-  let statsY = nextY;
   statLines.forEach((line) => {
-    ctx.fillText(line, descX, statsY);
+    ctx.fillText(line, statsX, statsY);
     statsY += 28;
   });
 
@@ -838,7 +952,7 @@ function generateResultImage() {
   const gameUrl = window.location.href.split("#")[0];
   ctx.font = "17px 'Inter', system-ui, sans-serif";
   ctx.fillStyle = "#9CA3AF";
-  ctx.fillText(gameUrl, descX, height - cardMargin - 40);
+  ctx.fillText(gameUrl, innerLeft, innerBottom + 8);
 
   generatedImageDataUrl = canvas.toDataURL("image/png");
 
