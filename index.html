@@ -2,117 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Payroll Manager Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Lilita+One&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
-  >
+  />
 
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app">
-    <header class="header">
-      <h1>Payroll Manager Simulator</h1>
-      <p class="subtitle">10 scenarios. Discover your payroll management style.</p>
-    
-      <div class="progress-container">
-        <div id="progress-label" class="progress-label">Scenario 1 of 10</div>
+  <div class="page-root">
+    <header class="page-header">
+      <h1 class="app-title">Payroll Manager Simulator</h1>
+      <p class="app-subtitle">
+        10 scenarios. Discover your payroll management style.
+      </p>
+
+      <div class="progress-wrapper">
+        <div class="progress-label" id="progress-label"></div>
         <div class="progress-bar">
-          <div id="progress-fill" class="progress-fill"></div>
+          <div class="progress-fill" id="progress-fill"></div>
         </div>
       </div>
     </header>
 
-<!-- ========================= -->
-<!-- INTRO / LANDING HERO      -->
-<!-- ========================= -->
-<section id="intro-section" class="hero-card">
-  <div class="hero-header">
-    <span class="hero-badge">Interactive · 10 scenarios · 5–7 minutes</span>
-    <h2 class="hero-title">Step into the Global Payroll hot seat.</h2>
-    <p class="hero-subtitle">
-      You’re the Payroll Manager. Make 10 rapid-fire decisions under pressure.
-      Every trade-off shapes your profile and reveals your payroll management style.
-    </p>
-  </div>
+    <main class="page-main">
 
-  <div class="hero-layout">
-    <ul class="hero-steps">
-      <li>
-        <span class="hero-step-number">1</span>
-        <div>
-          <div class="hero-step-title">Read each scenario</div>
-          <div class="hero-step-text">
-            Real-world payroll situations across cut-offs, compliance, providers, and leadership.
+      <!-- ========================= -->
+      <!-- INTRO / LANDING HERO      -->
+      <!-- ========================= -->
+      <section id="intro-section" class="hero-card">
+        <div class="hero-header">
+          <span class="hero-badge">Interactive · 10 scenarios · 5–7 minutes</span>
+          <h2 class="hero-title">Step into the Global Payroll hot seat.</h2>
+          <p class="hero-subtitle">
+            You’re the Payroll Manager. Make 10 rapid-fire decisions under pressure.
+            Every trade-off shapes your profile and reveals your payroll management style.
+          </p>
+        </div>
+
+        <div class="hero-layout">
+          <ul class="hero-steps">
+            <li>
+              <span class="hero-step-number">1</span>
+              <div>
+                <div class="hero-step-title">Read each scenario</div>
+                <div class="hero-step-text">
+                  Real-world payroll situations across cut-offs, compliance, providers, and leadership.
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="hero-step-number">2</span>
+              <div>
+                <div class="hero-step-title">Pick your instinctive response</div>
+                <div class="hero-step-text">
+                  There are no “right” answers – just different risk and relationship trade-offs.
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="hero-step-number">3</span>
+              <div>
+                <div class="hero-step-title">See your archetype & radar</div>
+                <div class="hero-step-text">
+                  Get a visual profile of your strengths across accuracy, compliance, timeliness,
+                  trust, morale, and relationships.
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <div class="hero-cta-block">
+            <button id="start-button" class="btn hero-cta">
+              Start the simulation
+            </button>
+            <p class="hero-note">
+              No sign-up. No data collected about you personally.  
+              Just your decisions – and what they say about how you run payroll.
+            </p>
           </div>
         </div>
-      </li>
-      <li>
-        <span class="hero-step-number">2</span>
-        <div>
-          <div class="hero-step-title">Pick your instinctive response</div>
-          <div class="hero-step-text">
-            There are no “right” answers – just different risk and relationship trade-offs.
-          </div>
-        </div>
-      </li>
-      <li>
-        <span class="hero-step-number">3</span>
-        <div>
-          <div class="hero-step-title">See your archetype & radar</div>
-          <div class="hero-step-text">
-            Get a visual profile of your strengths across accuracy, compliance, timeliness, trust,
-            morale, and relationships.
-          </div>
-        </div>
-      </li>
-    </ul>
+      </section>
 
-    <div class="hero-cta-block">
-      <button id="start-button" class="btn hero-cta">
-        Start the simulation
-      </button>
-      <p class="hero-note">
-        No sign-up. No data collected about you personally.  
-        Just your decisions – and what they say about how you run payroll.
-      </p>
-    </div>
-  </div>
-</section>
+      <!-- ========================= -->
+      <!-- SCENARIO SECTION          -->
+      <!-- ========================= -->
+      <section id="scenario-section" class="card hidden">
+        <h2 id="scenario-title"></h2>
+        <p id="scenario-description" class="scenario-description"></p>
 
+        <div id="choices-container" class="choices-container"></div>
 
-      <!-- RESULT VIEW -->
-      <section id="result-section" class="card hidden">
-        <h2>Your Result</h2>
-        <h3 id="result-title"></h3>
+        <p id="outcome" class="outcome hidden"></p>
 
-        <div class="result-image-wrapper">
-          <img
-            id="result-image"
-            class="result-image hidden"
-            alt="Your Payroll Manager result image"
-          />
-        </div>
-
-        <div class="result-actions">
-          <button id="download-image-button" class="btn primary">
-            Download result image
+        <div class="next-wrapper">
+          <button id="next-button" class="btn secondary-btn hidden">
+            Next scenario
           </button>
         </div>
+      </section>
 
-        <p id="share-status" class="share-hint"></p>
+      <!-- ========================= -->
+      <!-- RESULT SECTION            -->
+      <!-- ========================= -->
+      <section id="result-section" class="card hidden">
+        <h2>Your Result</h2>
+        <h3 id="result-title" class="result-title"></h3>
+
+        <img
+          id="result-image"
+          class="result-image hidden"
+          alt="Payroll Manager Simulator result image"
+        />
+
+        <button id="download-image-button" class="btn primary-btn">
+          Download result image
+        </button>
+
+        <p id="share-status" class="share-status">
+          Result image downloaded. Attach it to your LinkedIn post along with the link.
+        </p>
       </section>
     </main>
+
+    <footer class="page-footer">
+      <p>
+        Built as a just-for-fun experiment in global payroll decision-making.
+      </p>
+    </footer>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <!-- Game script -->
   <script src="script.js"></script>
 </body>
 </html>
