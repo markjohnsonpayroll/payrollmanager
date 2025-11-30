@@ -739,15 +739,6 @@ function renderResult() {
   // log to Firestore (aggregated stats only)
   updateAggregateStats();
 
-  // convert scores to bands
-  function scoreToBandLabel(value) {
-  if (value <= -6) return "Needs focus";
-  if (value <= -2) return "Emerging";
-  if (value <= 1) return "Balanced";
-  if (value <= 5) return "Strong";
-  return "Signature strength";
-  }
-  
   // Generate the image once fonts are ready
   if (document.fonts && document.fonts.load) {
     document.fonts
@@ -862,6 +853,15 @@ function drawRadarChart(ctx, centerX, centerY, radius, values, labels, color) {
   ctx.stroke();
 
   ctx.restore();
+}
+
+// Map raw score -> friendly band label
+function scoreToBandLabel(value) {
+  if (value <= -6) return "Needs focus";
+  if (value <= -2) return "Emerging";
+  if (value <= 1) return "Balanced";
+  if (value <= 5) return "Strong";
+  return "Signature strength";
 }
 
 // =======================================
@@ -1024,7 +1024,6 @@ function generateResultImage() {
   }
 }
 
-
 // =======================================
 // DOWNLOAD HANDLER
 // =======================================
@@ -1071,9 +1070,6 @@ const firebaseConfig = {
   measurementId: "G-MX0N4WLCM5",
 };
 
-// Use the COMPAT SDK (because index.html uses firebase-app-compat.js)
 firebase.initializeApp(firebaseConfig);
-
-// Firestore reference
 const db = firebase.firestore();
 const increment = firebase.firestore.FieldValue.increment;
