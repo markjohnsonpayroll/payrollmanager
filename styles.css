@@ -432,10 +432,29 @@ body {
 
 .share-actions {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
 }
+
+.share-actions .share-btn {
+  padding-inline: 1.4rem;
+}
+
+.share-text-preview {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #e5e7eb;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 
 .share-status {
   margin-top: 6px;
@@ -494,10 +513,21 @@ body {
     max-width: 100%;
   }
 
+
+@media (max-width: 640px) {
   .share-actions {
-    justify-content: flex-start;
+    width: 100%;
   }
 
+  .share-actions .share-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .share-text-preview {
+    font-size: 0.8rem;
+  }
+   
   .copy-icon-btn {
     width: 34px;
     height: 34px;
