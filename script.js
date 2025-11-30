@@ -557,10 +557,12 @@ const nextButtonEl = document.getElementById("next-button");
 const resultTitleEl = document.getElementById("result-title");
 const resultDescriptionEl = document.getElementById("result-description");
 const statsListEl = document.getElementById("stats-list");
-const progressTextEl = document.getElementById("progress-text");
 const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
+const progressLabelEl = document.getElementById("progress-label");
+const progressFillEl = document.getElementById("progress-fill");
+
 
 function applyEffects(effects) {
   for (const key in effects) {
@@ -578,9 +580,16 @@ function renderScenario() {
     return;
   }
 
-  if (progressTextEl) {
-    progressTextEl.textContent = `Scenario ${scenario.id} of ${scenarios.length}`;
+  if (progressLabelEl && progressFillEl) {
+    const currentNum = scenario.id;
+    const total = scenarios.length;
+    progressLabelEl.textContent = `Scenario ${currentNum} of ${total}`;
+  
+    // progress from 0% before scenario 1 up to ~90% on scenario 10
+    const percent = ((currentNum - 1) / total) * 100;
+    progressFillEl.style.width = `${percent}%`;
   }
+
 
   scenarioTitleEl.textContent = `Scenario ${scenario.id}: ${scenario.title}`;
   scenarioDescriptionEl.textContent = scenario.description;
