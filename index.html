@@ -116,47 +116,42 @@
       <!-- ========================= -->
       <!-- RESULT SECTION            -->
       <!-- ========================= -->
-      <section id="result-section" class="card hidden">
-        <h2>Your Result</h2>
-        <h3 id="result-title" class="result-title"></h3>
-
-        <!-- NEW: textual description + personalised summary -->
-        <p id="result-description" class="result-description"></p>
-        <p id="result-summary" class="result-summary"></p>
-
-        <img
-          id="result-image"
-          class="result-image hidden"
-          alt="Payroll Manager Simulator result image"
-        />
-
+    <section id="result-section" class="card hidden">
+      <h2>Your Result</h2>
+      <h3 id="result-title" class="result-title"></h3>
+    
+      <p id="archetype-description" class="archetype-description"></p>
+      <p id="personalised-summary" class="personalised-summary"></p>
+    
+      <img
+        id="result-image"
+        class="result-image hidden"
+        alt="Payroll Manager Simulator result image"
+      />
+    
+      <!-- Download button (only one!) -->
+      <div class="share-actions">
         <button id="download-image-button" class="btn primary-btn">
           Download Image
         </button>
-
-        <p class="share-prompt">
-          Share your result on LinkedIn and tag
-          <strong>#PayrollManagerSimulator</strong> to see how others compare.
-        </p>
-        
-        <!-- Download CTA only -->
-        <div class="share-actions">
-          <button id="download-image-button" class="btn primary-btn">
-            Download Image
-          </button>
-        </div>
-        
-        <!-- Share text + Copy button underneath -->
-        <div class="share-text-block">
-          <pre id="share-text-preview" class="share-text-preview"></pre>
-        
-          <button id="copy-share-button" class="btn tertiary-btn copy-btn">
-            Copy
-          </button>
-        
-          <p id="share-status" class="share-status"></p>
-        </div>
-
+      </div>
+    
+      <p class="share-prompt">
+        Share your result on LinkedIn and tag
+        <strong>#PayrollManagerSimulator</strong> to see how others compare.
+      </p>
+    
+      <!-- Share text + copy button underneath -->
+      <div class="share-text-block">
+        <pre id="share-text-preview" class="share-text-preview"></pre>
+    
+        <button id="copy-share-button" class="btn tertiary-btn copy-btn">
+          Copy
+        </button>
+    
+        <p id="share-status" class="share-status"></p>
+      </div>
+    </section>
     </main>
 
     <footer class="page-footer">
