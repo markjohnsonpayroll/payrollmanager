@@ -552,6 +552,8 @@ const progressFillEl = document.getElementById("progress-fill");
 const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
+const linkedinShareButtonEl = document.getElementById("linkedin-share-button");
+const copyLinkButtonEl = document.getElementById("copy-link-button");
 
 // NEW: intro / start
 const introSection = document.getElementById("intro-section");
@@ -921,6 +923,134 @@ function generateResultImage() {
   ctx.lineJoin = "round";
 
   ctx.font = "900 56px 'Inter', system-ui, sans-serif";
+  const titleWidth = ctx.measureText(title).width;
+  const titleX = innerLeft + (contentWidth - titleWidth) / 2;
+  const titleY = innerTop + 10;
+
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = "#020617";
+  ctx.strokeText(title, titleX, titleY);
+
+  ctx.fillStyle = "#F9FAFB";
+  ctx.fillText(title, titleX, titleY);
+
+  // ===== DESCRIPTION =====
+  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+  const descX = innerLeft;
+  const descY = titleY + 70;
+  const descWidth = contentWidth;
+
+  let nextY = drawWrappedText(
+    ctx,
+    latestArchetype.description,
+    descX,
+    descY,
+    descWidth,
+    28
+  );
+
+  nextY += 10;
+
+  // ===== RADAR + STATS BLOCK =====
+  const blockTop = nextY + 10;
+  const blockBottom = innerBottom - 50; // leave a bit more space for footer
+  const blockHeight = blockBottom - blockTop;
+
+  const radarRadius = 115;
+  const radarCenterY = blockTop + blockHeight / 2;
+  const radarCenterX = innerLeft + radarRadius + 20;
+
+  // Prepare values for radar (normalised)
+  const safeCompliance = -currentStats.complianceRisk;
+
+  const rawValues = [
+    currentStats.accuracy,
+    currentStats.timeliness,
+    currentStats.teamMorale,
+    currentStats.relationships,
+    currentStats.leadershipTrust,
+    safeCompliance,
+  ];
+
+  const labels = ["ACC", "TIME", "MORALE", "REL", "LEAD", "COMP"];
+  const values = rawValues.map((v) => normalise(v, -10, 10));
+
+  drawRadarChart(
+    ctx,
+    radarCenterX,
+    radarCenterY,
+    radarRadius,
+    values,
+    labels,
+    borderColor
+  );
+
+  // Stats text on the right, vertically centred with radar block
+  const statsX = radarCenterX + radarRadius + 60;
+  let statsY = blockTop + (blockHeight - 6 * 26) / 2; // centre ~6 lines
+
+  ctx.font = "20px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+
+  const statLines = [
+    `Team Morale: ${currentStats.teamMorale}`,
+    `Compliance Risk (lower is better): ${currentStats.complianceRisk}`,
+    `Leadership Trust: ${currentStats.leadershipTrust}`,
+    `Accuracy: ${currentStats.accuracy}`,
+    `Timeliness: ${currentStats.timeliness}`,
+    `Cross-Functional Relationships: ${currentStats.relationships}`,
+  ];
+
+  statLines.forEach((line) => {
+    ctx.fillText(line, statsX, statsY);
+    statsY += 26;
+  });
+
+  // ===== BRANDED FOOTER =====
+  const gameUrl = window.location.href.split("#")[0];
+  const footerY = innerBottom - 16;
+
+  // subtle divider line
+  ctx.strokeStyle = "#111827";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(innerLeft, footerY);
+  ctx.lineTo(innerRight, footerY);
+  ctx.stroke();
+
+  // branding text
+  ctx.font = "16px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#E5E7EB";
+  ctx.fillText("Payroll Manager Simulator", innerLeft, footerY + 24);
+
+  ctx.font = "14px 'Inter', system-ui, sans-serif";
+  ctx.fillStyle = "#9CA3AF";
+  // nice clean URL without protocol
+  const cleanUrl = gameUrl.replace(/^https?:\/\//, "");
+  ctx.fillText(cleanUrl, innerLeft, footerY + 44);
+
+  generatedImageDataUrl = canvas.toDataURL("image/png");
+
+  if (resultImageEl) {
+    resultImageEl.src = generatedImageDataUrl;
+    resultImageEl.classList.remove("hidden");
+  }
+}
+
+
+  const innerLeft = cardMargin + 40;
+  const innerRight = width - cardMargin - 40;
+  const innerTop = cardMargin + 20;
+  const innerBottom = height - cardMargin - 40;
+  const contentWidth = innerRight - innerLeft;
+
+  // ===== TITLE =====
+  const title = latestArchetype.title.toUpperCase();
+  ctx.textBaseline = "top";
+  ctx.lineJoin = "round";
+
+  ctx.font = "900 56px 'Inter', system-ui, sans-serif";
 
   const titleWidth = ctx.measureText(title).width;
   const titleX = innerLeft + (contentWidth - titleWidth) / 2;
@@ -1055,6 +1185,52 @@ function handleDownloadImageClick() {
 
 if (downloadImageButtonEl) {
   downloadImageButtonEl.addEventListener("click", handleDownloadImageClick);
+}
+
+// =======================================
+// SHARE HELPERS
+// =======================================
+
+function getCanonicalGameUrl() {
+  return window.location.href.split("#")[0];
+}
+
+function handleLinkedInShareClick() {
+  const url = getCanonicalGameUrl();
+  const shareUrl =
+    "https://www.linkedin.com/sharing/share-offsite/?url=" +
+    encodeURIComponent(url);
+
+  window.open(shareUrl, "_blank", "noopener");
+
+  if (shareStatusEl) {
+    shareStatusEl.textContent =
+      "LinkedIn share window opened. Upload your result image and hit post.";
+  }
+}
+
+async function handleCopyLinkClick() {
+  const url = getCanonicalGameUrl();
+
+  try {
+    await navigator.clipboard.writeText(url);
+    if (shareStatusEl) {
+      shareStatusEl.textContent = "Game link copied to clipboard.";
+    }
+  } catch (err) {
+    if (shareStatusEl) {
+      shareStatusEl.textContent =
+        "Couldn’t copy automatically – you can manually copy the URL from your browser.";
+    }
+  }
+}
+
+if (linkedinShareButtonEl) {
+  linkedinShareButtonEl.addEventListener("click", handleLinkedInShareClick);
+}
+
+if (copyLinkButtonEl) {
+  copyLinkButtonEl.addEventListener("click", handleCopyLinkClick);
 }
 
 // =======================================
