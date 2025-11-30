@@ -553,6 +553,10 @@ const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
 
+// NEW: intro / start
+const introSection = document.getElementById("intro-section");
+const startButton = document.getElementById("start-button");
+
 function applyEffects(effects) {
   for (const key in effects) {
     if (Object.prototype.hasOwnProperty.call(currentStats, key)) {
@@ -1053,8 +1057,23 @@ if (downloadImageButtonEl) {
   downloadImageButtonEl.addEventListener("click", handleDownloadImageClick);
 }
 
-// Start game on load
-renderScenario();
+// =======================================
+// INTRO START BUTTON HANDLER
+// =======================================
+
+if (startButton) {
+  startButton.addEventListener("click", () => {
+    if (introSection) {
+      introSection.classList.add("hidden");
+    }
+    scenarioSection.classList.remove("hidden");
+    // Start from scenario 1
+    currentStats = { ...INITIAL_STATS };
+    currentScenarioIndex = 0;
+    answerChoices = [];
+    renderScenario();
+  });
+}
 
 // =====================
 // FIREBASE INIT
