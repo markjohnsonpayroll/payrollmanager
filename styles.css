@@ -533,3 +533,35 @@ button {
     width: 100%;
   }
 }
+
+/* About creator card */
+.about-card {
+  margin-top: 32px;
+  padding: 24px;
+}
+
+.about-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #f9fafb;
+}
+
+.about-body {
+  margin-bottom: 12px;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+.about-cta {
+  margin-top: 8px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .about-cta {
+    width: 100%;
+  }
+}
+
