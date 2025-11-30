@@ -1,6 +1,20 @@
-/* ===========================
-   Global Layout / Page
-   =========================== */
+/* =========================
+   Base + Layout
+   ========================= */
+
+:root {
+  --bg-main: #020617;
+  --bg-card: #020617;
+  --bg-card-soft: #020617;
+  --bg-elevated: #020617;
+  --border-subtle: rgba(31, 41, 55, 0.9);
+  --border-strong: rgba(55, 65, 81, 0.95);
+  --accent-blue: #2563eb;
+  --accent-blue-dark: #1d4ed8;
+  --text-primary: #f9fafb;
+  --text-muted: #9ca3af;
+  --text-soft: #6b7280;
+}
 
 *,
 *::before,
@@ -8,40 +22,31 @@
   box-sizing: border-box;
 }
 
-:root {
-  --bg-main: #020617;
-  --bg-card: radial-gradient(circle at top left, #020617 0%, #020617 45%, #020617 100%);
-  --bg-elevated: rgba(15, 23, 42, 0.98);
-  --border-subtle: rgba(148, 163, 184, 0.18);
-  --text-main: #e5e7eb;
-  --text-muted: #9ca3af;
-  --accent: #2563eb;
-  --accent-soft: rgba(37, 99, 235, 0.18);
-}
-
 html,
 body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
+    "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+  color: var(--text-primary);
 }
 
 body {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  background: radial-gradient(circle at top, #0b1120 0%, #020617 55%, #020617 100%);
-  color: var(--text-main);
+  display: flex;
+  justify-content: center;
 }
 
 .page-root {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 16px 40px;
+  width: 100%;
+  max-width: 960px;
+  padding: 24px 16px 48px;
 }
 
-/* ===========================
-   Header / Progress
-   =========================== */
+/* =========================
+   Header + Progress
+   ========================= */
 
 .page-header {
   text-align: center;
@@ -49,101 +54,99 @@ body {
 }
 
 .app-title {
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
   margin: 0 0 4px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  color: #f9fafb;
 }
 
 .app-subtitle {
-  margin: 0;
+  margin: 0 0 16px;
   font-size: 0.98rem;
-  color: var(--text-muted);
+  color: var(--text-soft);
 }
 
 .progress-wrapper {
-  margin-top: 18px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .progress-label {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .progress-bar {
   width: 100%;
   height: 4px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(15, 23, 42, 0.9);
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #38bdf8, #2563eb);
-  transition: width 260ms ease-out;
+  background: linear-gradient(to right, #22c55e, #2563eb);
+  border-radius: 999px;
+  transition: width 0.25s ease-out;
 }
 
-/* ===========================
-   Cards (Intro / Scenario / Result)
-   =========================== */
+/* =========================
+   Cards
+   ========================= */
+
+.page-main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 
 .card,
 .hero-card {
-  background: radial-gradient(circle at top left, #020617 0%, #020617 50%, #020617 100%);
+  background: radial-gradient(circle at top left, #020617 0, #020617 35%, #020617 100%);
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.9);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.85);
-  padding: 24px 22px 26px;
-  margin-bottom: 28px;
+  border: 1px solid rgba(31, 41, 55, 0.95);
+  box-shadow: 0 18px 55px rgba(15, 23, 42, 0.85);
+  padding: 20px 24px 22px;
 }
 
-.hero-card {
-  margin-top: 8px;
-}
-
-/* ===========================
-   Intro / Hero Section
-   =========================== */
+/* Intro / hero */
 
 .hero-header {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  color: var(--text-muted);
   padding: 4px 10px;
   border-radius: 999px;
+  border: 1px solid rgba(55, 65, 81, 0.85);
   background: rgba(15, 23, 42, 0.9);
-  color: #a5b4fc;
-  border: 1px solid rgba(79, 70, 229, 0.4);
 }
 
 .hero-title {
-  font-size: 1.5rem;
-  margin: 12px 0 6px;
-  font-weight: 800;
-  color: #f9fafb;
+  margin: 10px 0 4px;
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
 }
 
 .hero-subtitle {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   color: var(--text-muted);
 }
 
 .hero-layout {
   display: flex;
   gap: 24px;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .hero-steps {
@@ -153,32 +156,31 @@ body {
   flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .hero-steps li {
   display: flex;
   gap: 10px;
+  align-items: flex-start;
 }
 
 .hero-step-number {
-  width: 26px;
-  height: 26px;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
   border-radius: 999px;
-  background: rgba(30, 64, 175, 0.95);
+  font-size: 0.8rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #e5e7eb;
-  flex-shrink: 0;
+  background: rgba(15, 23, 42, 1);
+  border: 1px solid rgba(55, 65, 81, 0.9);
 }
 
 .hero-step-title {
+  font-size: 0.96rem;
   font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 2px;
 }
 
 .hero-step-text {
@@ -187,253 +189,147 @@ body {
 }
 
 .hero-cta-block {
-  flex: 1.35;
+  flex: 1.2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 12px;
+  gap: 10px;
+  align-items: stretch;
 }
 
 .hero-note {
+  margin: 0;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-soft);
 }
 
-/* ===========================
-   Scenario Section
-   =========================== */
+/* =========================
+   Scenario section
+   ========================= */
 
 #scenario-title {
   margin: 0 0 6px;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #f9fafb;
+  font-size: 1.3rem;
 }
 
-.scenario-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
+.scenario-description {
+  margin: 6px 0 16px;
+  font-size: 0.96rem;
+  color: var(--text-muted);
 }
+
+/* Scenario tags (emoji boxes) */
 
 .scenario-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: 6px;
 }
 
-.scenario-tag-pill {
+.scenario-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 10px 4px;
+  gap: 6px;
+  padding: 2px 10px 4px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.98);
-  border: 1px solid rgba(51, 65, 85, 0.85);
-  font-size: 0.78rem;
-  color: #e5e7eb;
-  white-space: nowrap;
-}
-
-.scenario-tags-label {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-right: 6px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  color: #e5e7eb;
 }
 
-.scenario-description {
-  margin: 10px 0 18px;
-  font-size: 0.96rem;
-  color: var(--text-main);
+.scenario-tag-emoji {
+  font-size: 0.9rem;
 }
+
+/* Choices */
 
 .choices-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 12px;
 }
 
-.outcome {
-  margin-top: 18px;
-  font-size: 0.93rem;
-  color: #e5e7eb;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* Scenario fade transition (simple) */
-#scenario-section {
-  opacity: 1;
-  transition: opacity 200ms ease-out;
-}
-
-#scenario-section.fade-out {
-  opacity: 0;
-}
-
-/* ===========================
-   Buttons
-   =========================== */
-
-.btn {
-  border: none;
-  cursor: pointer;
-  border-radius: 999px;
-  padding: 12px 20px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  transition:
-    background 150ms ease,
-    transform 120ms ease,
-    box-shadow 150ms ease,
-    border-color 150ms ease,
-    color 150ms ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
-
-/* Primary blue pill – used for main CTAs & choices */
-.primary-btn,
-.hero-cta,
-.choices-container .btn {
-  background: #2563eb;
-  color: #f9fafb;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
-  border: 1px solid rgba(37, 99, 235, 0.9);
-}
-
-.primary-btn:hover,
-.hero-cta:hover,
-.choices-container .btn:hover {
-  background: #1d4ed8;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
-  transform: translateY(-1px);
-}
-
-.secondary-btn {
-  background: rgba(15, 23, 42, 0.95);
-  color: #e5e7eb;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.7);
-}
-
-.secondary-btn:hover {
-  background: rgba(15, 23, 42, 1);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.85);
-}
-
-/* Tertiary / neutral buttons */
-.tertiary-btn {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-  border: 1px solid rgba(55, 65, 81, 0.85);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.7);
-}
-
-.tertiary-btn:hover {
-  background: rgba(15, 23, 42, 1);
-}
-
-/* Remove harsh blue glow, keep a subtle focus ring */
-.btn:focus {
-  outline: none;
-}
-
-.btn:focus-visible {
-  outline: 2px solid rgba(129, 140, 248, 0.8);
-  outline-offset: 2px;
-  box-shadow: none;
-}
-
-.btn.disabled,
-.btn:disabled {
-  opacity: 0.55;
-  cursor: default;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Scenario Next button wrapper */
-.next-wrapper {
-  margin-top: 18px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Answer buttons specific tweaks */
 .choices-container .btn {
   width: 100%;
   justify-content: flex-start;
+  text-align: left;
+  white-space: normal;      /* ALLOW WRAP */
+  word-wrap: break-word;    /* BREAK LONG STRINGS */
+  line-height: 1.4;
 }
 
-/* ===========================
-   Result Section
-   =========================== */
+/* Outcome text */
 
-#result-section h2 {
-  margin: 0 0 4px;
-  font-size: 1.1rem;
+.outcome {
+  margin-top: 14px;
+  font-size: 0.95rem;
   color: var(--text-muted);
 }
 
+/* Next button wrapper */
+
+.next-wrapper {
+  margin-top: 18px;
+  text-align: right;
+}
+
+/* Fade transitions between scenarios */
+
+.card.fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+}
+
+.card.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+}
+
+/* =========================
+   Result section
+   ========================= */
+
 .result-title {
-  margin: 0 0 14px;
-  font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
+  margin-top: 4px;
+  font-size: 1.4rem;
 }
 
-.result-description {
-  margin: 0 0 6px;
+.archetype-description {
+  margin-top: 6px;
   font-size: 0.98rem;
-  color: var(--text-main);
 }
 
-.result-personalised {
-  margin: 2px 0 16px;
-  font-size: 0.92rem;
+.personalised-summary {
+  margin-top: 6px;
+  font-size: 0.95rem;
   color: var(--text-muted);
 }
 
 .result-image {
-  display: block;
   width: 100%;
-  max-width: 960px;
-  margin: 0 auto 18px;
+  max-width: 820px;
+  display: block;
+  margin: 18px auto 8px;
   border-radius: 16px;
-  border: 2px solid rgba(15, 23, 42, 0.9);
+  border: 2px solid #1d4ed8;
 }
 
-/* ===========================
-   Share CTA + Copy
-   =========================== */
+/* =========================
+   Share / Copy area
+   ========================= */
 
 .share-prompt {
-  margin: 4px 0 10px;
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: var(--text-soft);
+  margin: 10px 0 6px;
 }
 
-.share-prompt strong {
-  color: #e5e7eb;
-}
-
-.share-actions {
-  margin-top: 8px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-/* Text box */
 .share-text-block {
-  margin-top: 10px;
+  margin-top: 4px;
 }
 
 .share-text-preview {
@@ -452,98 +348,28 @@ body {
   overflow-y: auto;
 }
 
-#download-image-button {
-  align-self: flex-start;
-}
-
-/* Copy button under the text, dark pill */
 .copy-btn {
   margin-top: 8px;
-  background: rgba(15, 23, 42, 0.98);
-  color: #f1f5f9;
-  border-radius: 999px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  box-shadow: none; /* no glow */
-  padding: 10px 18px;
-  font-weight: 500;
-}
-
-.copy-btn:hover {
-  background: rgba(15, 23, 42, 1);
+  width: 100%;
 }
 
 .share-status {
-  margin-top: 2px;
-  font-size: 0.85rem;
+  margin-top: 4px;
+  font-size: 0.82rem;
   color: var(--text-muted);
 }
 
-/* ===========================
-   Footer
-   =========================== */
+/* =========================
+   Buttons (shared)
+   ========================= */
 
-.page-footer {
-  text-align: center;
-  margin-top: 16px;
-  font-size: 0.83rem;
-  color: var(--text-muted);
+button {
+  font-family: inherit;
+  font-size: 100%;
+  border: none;
+  background: none;
+  padding: 0;
 }
-
-/* ===========================
-   Mobile / Responsive
-   =========================== */
-
-@media (max-width: 768px) {
-  .page-root {
-    padding: 18px 10px 28px;
-  }
-
-  .hero-layout {
-    flex-direction: column;
-  }
-
-  .card,
-  .hero-card {
-    padding: 18px 14px 20px;
-  }
-
-  .choices-container .btn {
-    font-size: 0.9rem;
-  }
-
-/* Full-width CTAs on mobile */
-@media (max-width: 768px) {
-  #download-image-button,
-  .copy-btn,
-  .hero-cta {
-    width: 100%;
-  }
-}
-
-  .result-image {
-    margin-bottom: 14px;
-  }
-
-  .share-text-preview {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-title {
-    font-size: 1.8rem;
-  }
-
-  .hero-title {
-    font-size: 1.3rem;
-  }
-
-  #scenario-title {
-    font-size: 1.05rem;
-  }
-}
-
-/* ============ Buttons ============ */
 
 .btn {
   display: inline-flex;
@@ -565,21 +391,22 @@ body {
     box-shadow 0.15s ease;
 }
 
-/* Main blue pills: choices, hero CTA, download */
+/* Main blue pills: hero CTA, choices, download */
+
 .primary-btn,
 .hero-cta,
 .choices-container .btn {
-  background: #2563eb;
-  border-color: #1d4ed8;
-  color: #f9fafb;
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.45); /* subtle, not neon */
+  background: var(--accent-blue);
+  border-color: var(--accent-blue-dark);
+  color: var(--text-primary);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.45);
 }
 
 .primary-btn:hover,
 .hero-cta:hover,
 .choices-container .btn:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: var(--accent-blue-dark);
+  border-color: var(--accent-blue-dark);
   box-shadow: 0 4px 10px rgba(15, 23, 42, 0.55);
   transform: translateY(-1px);
 }
@@ -592,7 +419,8 @@ body {
   box-shadow: none;
 }
 
-/* Dark minimal button (Copy) */
+/* Dark minimal button for Copy */
+
 .tertiary-btn,
 .copy-btn {
   background: rgba(15, 23, 42, 0.96);
@@ -606,3 +434,59 @@ body {
   background: rgba(15, 23, 42, 1);
 }
 
+/* =========================
+   Footer
+   ========================= */
+
+.page-footer {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+/* =========================
+   Utilities
+   ========================= */
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================
+   Responsive tweaks
+   ========================= */
+
+@media (max-width: 768px) {
+  .page-root {
+    padding: 20px 10px 40px;
+  }
+
+  .card,
+  .hero-card {
+    padding: 18px 16px 20px;
+  }
+
+  .app-title {
+    font-size: 1.7rem;
+  }
+
+  .hero-layout {
+    flex-direction: column;
+  }
+
+  #scenario-title {
+    font-size: 1.1rem;
+  }
+
+  .choices-container .btn {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+  }
+
+  #download-image-button,
+  .copy-btn,
+  .hero-cta {
+    width: 100%;
+  }
+}
