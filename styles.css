@@ -202,6 +202,39 @@ body {
   color: var(--text-soft);
 }
 
+/* About creator card */
+.about-card {
+  margin-top: 32px;
+}
+
+.about-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.about-body {
+  margin-bottom: 10px;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+/* Reuse primary button styling but make sure it looks good here */
+.about-cta {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* On mobile, make the CTA full-width like the other buttons */
+@media (max-width: 640px) {
+  .about-cta {
+    width: 100%;
+  }
+}
+
+
 /* =========================
    Scenario section
    ========================= */
