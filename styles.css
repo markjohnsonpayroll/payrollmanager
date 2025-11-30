@@ -2,7 +2,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
@@ -12,6 +11,8 @@ body {
   display: flex;
   justify-content: center;
   padding: 24px;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .app {
@@ -25,8 +26,10 @@ body {
 }
 
 .header h1 {
-  font-size: 1.9rem;
+  font-family: "Lilita One", system-ui, sans-serif;
+  font-size: 2rem;
   margin-bottom: 4px;
+  letter-spacing: 0.04em;
 }
 
 .subtitle {
@@ -58,6 +61,7 @@ body {
 #scenario-title {
   font-size: 1.25rem;
   margin-bottom: 6px;
+  font-weight: 600;
 }
 
 #scenario-description {
@@ -88,6 +92,7 @@ body {
     border-color 0.15s ease,
     box-shadow 0.15s ease;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .btn:hover:not(.disabled) {
@@ -117,6 +122,14 @@ body {
   box-shadow: none;
 }
 
+/* Center the Next button row */
+.next-row {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Outcome box */
 .outcome {
   margin-top: 10px;
   padding: 11px 12px;
@@ -132,9 +145,12 @@ body {
   display: none;
 }
 
+/* Result view */
 #result-title {
-  font-size: 1.25rem;
+  font-family: "Lilita One", system-ui, sans-serif;
+  font-size: 1.6rem;
   margin-bottom: 6px;
+  letter-spacing: 0.03em;
 }
 
 #result-description {
@@ -154,6 +170,20 @@ body {
   font-size: 0.9rem;
   padding: 3px 0;
   color: #e5e7eb;
+}
+
+.result-image-wrapper {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.result-image {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .result-actions {
