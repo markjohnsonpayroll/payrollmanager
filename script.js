@@ -573,9 +573,10 @@ const downloadImageButtonEl = document.getElementById("download-image-button");
 const shareStatusEl = document.getElementById("share-status");
 const resultImageEl = document.getElementById("result-image");
 const personalisedSummaryEl = document.getElementById("personalised-summary");
-const archetypeDescriptionEl = document.querySelector(".result-archetype-description");
+const archetypeDescriptionEl = document.getElementById("archetype-description");
 const copyShareButtonEl = document.getElementById("copy-share-button");
 const shareTextPreviewEl = document.getElementById("share-text-preview");
+const aboutCreatorSection = document.getElementById("about-creator");
 
 // Intro / start
 const introSection = document.getElementById("intro-section");
@@ -838,6 +839,11 @@ function renderResult() {
   scenarioSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
 
+  // ✅ Show the “About the creator” card when the result is shown
+  if (aboutCreatorSection) {
+    aboutCreatorSection.classList.remove("hidden");
+  }
+
   if (progressLabelEl && progressFillEl) {
     progressLabelEl.textContent = "Game complete";
     progressFillEl.style.width = "100%";
@@ -846,11 +852,11 @@ function renderResult() {
   latestArchetype = determineArchetype(currentStats);
   resultTitleEl.textContent = latestArchetype.title;
 
-    // Update share text preview
+  // Update share text preview
   if (shareTextPreviewEl) {
     shareTextPreviewEl.textContent = buildShareText();
   }
-  
+
   if (archetypeDescriptionEl) {
     archetypeDescriptionEl.textContent = latestArchetype.description;
   }
@@ -1164,9 +1170,6 @@ function generateResultImage() {
   }
 }
 
-// Show "About the creator" section
-document.getElementById("about-creator").classList.remove("hidden");
-
 
 // =======================================
 // DOWNLOAD & SHARE HANDLERS
@@ -1247,6 +1250,9 @@ if (startButton) {
     if (introSection) {
       introSection.classList.add("hidden");
     }
+    if (aboutCreatorSection) {
+      aboutCreatorSection.classList.add("hidden");   // ✅ keep about hidden during scenarios
+    }
     scenarioSection.classList.remove("hidden");
     currentStats = { ...INITIAL_STATS };
     currentScenarioIndex = 0;
@@ -1254,6 +1260,7 @@ if (startButton) {
     renderScenario();
   });
 }
+
 
 // =====================
 // FIREBASE INIT
