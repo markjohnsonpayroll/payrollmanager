@@ -1164,6 +1164,10 @@ function generateResultImage() {
   }
 }
 
+// Show "About the creator" section
+document.getElementById("about-creator").classList.remove("hidden");
+
+
 // =======================================
 // DOWNLOAD & SHARE HANDLERS
 // =======================================
