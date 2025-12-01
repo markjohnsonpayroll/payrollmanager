@@ -113,7 +113,9 @@ body {
   padding: 20px 24px 22px;
 }
 
-/* Intro / hero */
+/* =========================
+   Intro / hero
+   ========================= */
 
 .hero-header {
   margin-bottom: 16px;
@@ -202,39 +204,6 @@ body {
   color: var(--text-soft);
 }
 
-/* About creator card */
-.about-card {
-  margin-top: 32px;
-}
-
-.about-heading {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.about-body {
-  margin-bottom: 10px;
-  color: #e5e7eb;
-  line-height: 1.6;
-}
-
-/* Reuse primary button styling but make sure it looks good here */
-.about-cta {
-  margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* On mobile, make the CTA full-width like the other buttons */
-@media (max-width: 640px) {
-  .about-cta {
-    width: 100%;
-  }
-}
-
-
 /* =========================
    Scenario section
    ========================= */
@@ -288,8 +257,8 @@ body {
   width: 100%;
   justify-content: flex-start;
   text-align: left;
-  white-space: normal;      /* ALLOW WRAP */
-  word-wrap: break-word;    /* BREAK LONG STRINGS */
+  white-space: normal;      /* allow wrap */
+  word-wrap: break-word;    /* break long strings */
   line-height: 1.4;
 }
 
@@ -424,6 +393,11 @@ button {
     box-shadow 0.15s ease;
 }
 
+.btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
 /* Main blue pills: hero CTA, choices, download */
 
 .primary-btn,
@@ -467,17 +441,17 @@ button {
   background: rgba(15, 23, 42, 1);
 }
 
-/* Make Download Image match the Copy button width */
+/* Make Download Image full width */
 #download-image-button {
   width: 100%;
   display: block;
+  margin-bottom: 10px;
 }
 
-#download-image-button {
-  margin-bottom: 10px; /* matches the spacing above the copy area */
-}
+/* =========================
+   About creator card
+   ========================= */
 
-/* About section card */
 .about-card {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -523,19 +497,6 @@ button {
   width: fit-content;
   align-self: flex-start;
 }
-
-/* Mobile tweaks */
-@media (max-width: 600px) {
-  .about-card {
-    padding: 20px;
-  }
-
-  .about-avatar {
-    width: 64px;
-    height: 64px;
-  }
-}
-
 
 /* =========================
    Footer
@@ -592,7 +553,13 @@ button {
   .hero-cta {
     width: 100%;
   }
+
+  .about-card {
+    padding: 20px;
+  }
+
+  .about-avatar {
+    width: 64px;
+    height: 64px;
+  }
 }
-
-
-
